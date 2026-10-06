@@ -1,0 +1,7 @@
+{
+  "name": "Komorebi Condo - Power & Generator Tracker",
+  "description": "Minimalist, cute Japanese-inspired condo power schedule and generator tracker with live status, countdown, timeline slots, and emergency lift request.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
