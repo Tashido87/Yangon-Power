@@ -1,4 +1,5 @@
 import React from 'react';
+import { RotateCcw } from 'lucide-react';
 import { Language, ShiftType } from '../types';
 import { translations } from '../i18n/translations';
 
@@ -9,6 +10,8 @@ interface DailyVisualBarProps {
   shift: ShiftType;
   hasEveningOutage?: boolean;
   onSelectHour?: (hour: number) => void;
+  isSimulated?: boolean;
+  onResetToLive?: () => void;
 }
 
 interface Segment {
@@ -58,8 +61,10 @@ export const DailyVisualBar: React.FC<DailyVisualBarProps> = ({
   currentMinute,
   language,
   shift,
-  hasEveningOutage = false,
+  hasEveningOutage = true,
   onSelectHour,
+  isSimulated = false,
+  onResetToLive,
 }) => {
   const [selectedSeg, setSelectedSeg] = React.useState<Segment | null>(null);
   const t = translations[language];
@@ -76,14 +81,30 @@ export const DailyVisualBar: React.FC<DailyVisualBarProps> = ({
   return (
     <div className="w-full bg-white rounded-2xl p-4 sm:p-5 border border-[#EFECE6] shadow-xs">
       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-        <h3 className="text-xs sm:text-sm font-bold text-[#2D3142] flex items-center gap-2">
-          <span>{t.visualBarTitle}</span>
-          <span className="text-[11px] font-normal text-[#8AA399]">
-            {shift === 'shift_b'
-              ? (language === 'en' ? '· 9 AM Outage Shift' : '· မနက် ၉ နာရီပျက် အလှည့်')
-              : (language === 'en' ? '· 5 AM Outage Shift' : '· မနက် ၅ နာရီပျက် အလှည့်')}
-          </span>
-        </h3>
+        <div className="flex items-center gap-2">
+          <h3 className="text-xs sm:text-sm font-bold text-[#2D3142] flex items-center gap-2">
+            <span>{t.visualBarTitle}</span>
+            <span className="text-[11px] font-normal text-[#8AA399]">
+              {shift === 'shift_b'
+                ? (language === 'en' ? '· 9 AM Outage Shift' : '· မနက် ၉ နာရီပျက် အလှည့်')
+                : (language === 'en' ? '· 5 AM Outage Shift' : '· မနက် ၅ နာရီပျက် အလှည့်')}
+            </span>
+          </h3>
+          {isSimulated && onResetToLive && (
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedSeg(null);
+                onResetToLive();
+              }}
+              className="cute-press text-[11px] font-bold text-[#4E7652] bg-[#EBF3EC] hover:bg-[#DCEBDD] px-2 py-0.5 rounded-lg flex items-center gap-1 border border-[#7A9E7E]/30"
+              title="Reset to current live Myanmar Standard Time"
+            >
+              <RotateCcw className="w-3 h-3 text-[#7A9E7E]" />
+              <span>{language === 'en' ? 'Reset Live' : 'လက်ရှိအချိန်'}</span>
+            </button>
+          )}
+        </div>
 
         {/* Legend */}
         <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[11px] text-[#6C727F]">
@@ -164,12 +185,27 @@ export const DailyVisualBar: React.FC<DailyVisualBarProps> = ({
             <span className="font-semibold">
               {language === 'en' ? selectedSeg.labelEn : selectedSeg.labelMy}
             </span>
-            <button
-              onClick={() => setSelectedSeg(null)}
-              className="text-[#8AA399] hover:text-[#2D3142] ml-2 text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-white border border-[#EFECE6]"
-            >
-              ✕
-            </button>
+            <div className="flex items-center gap-1.5 ml-2">
+              {isSimulated && onResetToLive && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedSeg(null);
+                    onResetToLive();
+                  }}
+                  className="text-[#7A9E7E] hover:text-[#587a5b] text-[10px] font-bold px-2 py-0.5 rounded-md bg-white border border-[#EFECE6] flex items-center gap-1"
+                >
+                  <RotateCcw className="w-2.5 h-2.5" />
+                  <span>{language === 'en' ? 'Reset' : 'လက်ရှိအချိန်'}</span>
+                </button>
+              )}
+              <button
+                onClick={() => setSelectedSeg(null)}
+                className="text-[#8AA399] hover:text-[#2D3142] text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-white border border-[#EFECE6]"
+              >
+                ✕
+              </button>
+            </div>
           </div>
         )}
       </div>

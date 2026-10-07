@@ -291,7 +291,7 @@ export const TRANSITIONS_SHIFT_B_NO_EVENING: DailyScheduleTransition[] = [
 export function calculateStatus(
   dateOrTime: { hour: number; minute: number; second: number },
   shift: ShiftType = 'shift_b',
-  hasEveningOutage: boolean = false
+  hasEveningOutage: boolean = true
 ): CurrentStatusCalculation {
   const { hour, minute, second } = dateOrTime;
   const currentTotalMinutes = hour * 60 + minute;
@@ -453,6 +453,20 @@ export interface MyanmarTimeInfo {
   weekday: string;
   dateStrEn: string;
   dateStrMy: string;
+  autoShift: ShiftType;
+}
+
+/**
+ * Automatically computes the alternating shift for a given Myanmar calendar date.
+ * Anchor: 2026-10-06 (Tuesday) was Shift B (9:00 AM - 1:00 PM Outage)
+ * 2026-10-07 (Wednesday) is Shift A (5:00 AM - 9:00 AM Outage, 9:00 AM Power Restored)
+ * Alternates day by day (တရက်စီ အလှည့်ကျစနစ်).
+ */
+export function getAutoShiftForDate(year: number, month: number, day: number): ShiftType {
+  const anchorTime = Date.UTC(2026, 9, 6); // 2026-10-06 (0-indexed month: 9 = Oct)
+  const targetTime = Date.UTC(year, month - 1, day);
+  const diffDays = Math.round((targetTime - anchorTime) / (1000 * 60 * 60 * 24));
+  return Math.abs(diffDays % 2) === 1 ? 'shift_a' : 'shift_b';
 }
 
 export function getLiveMyanmarTime(): MyanmarTimeInfo {
@@ -499,6 +513,7 @@ export function getLiveMyanmarTime(): MyanmarTimeInfo {
 
   const dateStrEn = `${weekday}, ${monthsEn[month - 1]} ${day}, ${year}`;
   const dateStrMy = `${toMyDigits(year)} ခုနှစ်၊ ${monthsMy[month - 1]}လ ${toMyDigits(day)} ရက် (${daysMy[weekday] || weekday}နေ့)`;
+  const autoShift = getAutoShiftForDate(year, month, day);
 
   return {
     hour,
@@ -510,6 +525,7 @@ export function getLiveMyanmarTime(): MyanmarTimeInfo {
     weekday,
     dateStrEn,
     dateStrMy,
+    autoShift,
   };
 }
 

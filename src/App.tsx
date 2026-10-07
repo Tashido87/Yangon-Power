@@ -19,8 +19,9 @@ export default function App() {
 
   const [language, setLanguage] = useState<Language>(initialSettings.language);
   const [isSoundEnabled, setIsSoundEnabled] = useState(initialSettings.isSoundEnabled);
+  const [rotationMode, setRotationMode] = useState<'auto' | 'manual'>(initialSettings.rotationMode || 'auto');
   const [shift, setShift] = useState<ShiftType>(initialSettings.shift);
-  // Default: false as user specified: "ညနေ ၅ ဆို မီးမပျက်တော့ဘူးနော်။ လောလောဆယ်"
+  // Active: 5 PM - 9 PM evening outage is active
   const [hasEveningOutage, setHasEveningOutage] = useState<boolean>(initialSettings.hasEveningOutage);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
@@ -50,6 +51,11 @@ export default function App() {
         setCurrentSecond(mmt.second);
         setLiveDateEn(mmt.dateStrEn);
         setLiveDateMy(mmt.dateStrMy);
+
+        // In auto rotation mode, automatically switch shift when a new day arrives in Myanmar!
+        if (rotationMode === 'auto') {
+          setShift(mmt.autoShift);
+        }
       } else {
         // In preview simulation mode, tick smoothly second-by-second
         setCurrentSecond((prevSec) => {
@@ -69,7 +75,7 @@ export default function App() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [isSimulated]);
+  }, [isSimulated, rotationMode]);
 
   // Status calculation based on active time, active shift, and evening outage toggle
   const statusInfo = calculateStatus(
@@ -91,9 +97,10 @@ export default function App() {
     prevStatusRef.current = statusInfo.state;
   }, [statusInfo.state, isSoundEnabled]);
 
-  const handleShiftChange = (newShift: ShiftType) => {
+  const handleShiftChange = (newShift: ShiftType, mode: 'auto' | 'manual' = 'manual') => {
     setShift(newShift);
-    saveStoredSettings({ shift: newShift });
+    setRotationMode(mode);
+    saveStoredSettings({ shift: newShift, rotationMode: mode });
   };
 
   const handleToggleEveningOutage = (val: boolean) => {
@@ -128,6 +135,9 @@ export default function App() {
     setCurrentSecond(mmt.second);
     setLiveDateEn(mmt.dateStrEn);
     setLiveDateMy(mmt.dateStrMy);
+    if (rotationMode === 'auto') {
+      setShift(mmt.autoShift);
+    }
   };
 
   // Format time string for display (e.g. "1:15:24 PM")
@@ -163,6 +173,7 @@ export default function App() {
           statusInfo={statusInfo}
           language={language}
           shift={shift}
+          rotationMode={rotationMode}
           hasEveningOutage={hasEveningOutage}
           onOpenSettings={() => setIsSettingsOpen(true)}
           isSimulated={isSimulated}
@@ -180,6 +191,8 @@ export default function App() {
           shift={shift}
           hasEveningOutage={hasEveningOutage}
           onSelectHour={(hour) => handleSimulateTime(hour, 0)}
+          isSimulated={isSimulated}
+          onResetToLive={handleResetToLive}
         />
 
         {/* Clean Minimalist Footer */}
@@ -202,6 +215,7 @@ export default function App() {
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
         shift={shift}
+        rotationMode={rotationMode}
         onShiftChange={handleShiftChange}
         hasEveningOutage={hasEveningOutage}
         onToggleEveningOutage={handleToggleEveningOutage}

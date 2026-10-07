@@ -12,6 +12,7 @@ interface HeroStatusCardProps {
   statusInfo: CurrentStatusCalculation;
   language: Language;
   shift: ShiftType;
+  rotationMode?: 'auto' | 'manual';
   hasEveningOutage: boolean;
   onOpenSettings: () => void;
   isSimulated: boolean;
@@ -27,6 +28,7 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
   statusInfo,
   language,
   shift,
+  rotationMode = 'auto',
   hasEveningOutage,
   onOpenSettings,
   isSimulated,
@@ -70,7 +72,7 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
     { label: '01:30 PM', desc: language === 'en' ? 'Power Back!' : '၁ နာရီ မီးလာချိန်', h: 13, m: 30 },
     { label: '05:30 PM', desc: language === 'en' ? 'Evening Standby' : 'ညနေ နားချိန်', h: 17, m: 30 },
     { label: '07:00 PM', desc: language === 'en' ? 'Evening Gen' : 'ညနေ မီးစက်', h: 19, m: 0 },
-    { label: '09:01 PM', desc: language === 'en' ? 'Outage / Gen Off' : 'မီးပျက် / မီးစက်ပိတ်', h: 21, m: 1 },
+    { label: '09:30 PM', desc: language === 'en' ? 'Power Back!' : 'ည ၉ နာရီ မီးလာချိန်', h: 21, m: 30 },
     { label: '11:45 PM', desc: language === 'en' ? 'Night Rest' : 'ညဘက်အိပ်ချိန်', h: 23, m: 45 },
   ];
 
@@ -98,8 +100,21 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
 
           <div className="flex items-center gap-2">
             {/* Clock container */}
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-2xl bg-[#FAF7F2] border border-[#EFECE6] text-xs sm:text-sm font-semibold text-[#2D3142] tabular-nums shadow-inner">
-              <Clock className="w-3.5 h-3.5 text-[#7A9E7E]" />
+            <button
+              type="button"
+              onClick={() => {
+                if (isSimulated) {
+                  onResetToLive();
+                  setShowTimeSlider(false);
+                  soundManager.playCutePop();
+                }
+              }}
+              title={isSimulated ? (language === 'en' ? 'Click to return to live time' : 'လက်ရှိအချိန်သို့ ပြန်သွားရန် နှိပ်ပါ') : 'Live Myanmar Time'}
+              className={`flex items-center gap-1.5 px-3 py-1 rounded-2xl border text-xs sm:text-sm font-semibold text-[#2D3142] tabular-nums shadow-inner transition-all ${
+                isSimulated ? 'bg-[#FFF5F2] border-[#FADCD5] hover:border-[#E2847A] cursor-pointer' : 'bg-[#FAF7F2] border-[#EFECE6]'
+              }`}
+            >
+              <Clock className={`w-3.5 h-3.5 ${isSimulated ? 'text-[#E2847A]' : 'text-[#7A9E7E]'}`} />
               <span>{currentTimeStr}</span>
               {isSimulated ? (
                 <span className="text-[10px] font-bold text-[#E2847A] bg-[#FDF0EE] px-1.5 py-0.2 rounded-md uppercase tracking-wider ml-1">
@@ -111,7 +126,24 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
                   MMT
                 </span>
               )}
-            </div>
+            </button>
+
+            {/* Direct Reset to Live Button (shown when simulated) */}
+            {isSimulated && (
+              <button
+                type="button"
+                onClick={() => {
+                  onResetToLive();
+                  setShowTimeSlider(false);
+                  soundManager.playCutePop();
+                }}
+                className="cute-press h-8 px-2.5 rounded-xl bg-[#7A9E7E] hover:bg-[#688B6C] text-white text-xs font-bold flex items-center gap-1.5 shadow-2xs transition-all animate-in fade-in"
+                title="Reset to current live Myanmar Standard Time"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span className="text-[11px]">{language === 'en' ? 'Reset Live' : 'လက်ရှိအချိန်'}</span>
+              </button>
+            )}
 
             {/* Time travel trigger button */}
             <button
@@ -132,6 +164,32 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
           </div>
         </div>
 
+        {/* Prominent Active Simulation Warning Banner */}
+        {isSimulated && (
+          <div className="mt-3 p-3 rounded-2xl bg-[#FFF6EE] border border-[#FADCD5] flex items-center justify-between gap-2 shadow-2xs animate-in fade-in">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#E2847A] animate-ping shrink-0" />
+              <div className="text-xs font-bold text-[#B8574B] truncate">
+                {language === 'en'
+                  ? 'Preview Mode Active (Simulated Hour)'
+                  : 'အချိန်စမ်းသပ်မှု ပြုလုပ်နေပါသည် (Preview Mode)'}
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                onResetToLive();
+                setShowTimeSlider(false);
+                soundManager.playCutePop();
+              }}
+              className="cute-press px-3 py-1.5 rounded-xl bg-[#7A9E7E] hover:bg-[#688B6C] text-white text-xs font-bold flex items-center gap-1.5 shadow-xs shrink-0 cursor-pointer"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>{language === 'en' ? 'Reset to Live Time' : 'လက်ရှိအချိန် ပြန်ထားရန်'}</span>
+            </button>
+          </div>
+        )}
+
         {/* Subtle Active Shift Status Indicator */}
         <div className="pt-2 pb-1">
           <div className="flex items-center justify-between text-xs text-[#727885] px-3.5 py-2 bg-[#FAF7F2] rounded-2xl border border-[#EAE6DF]">
@@ -139,8 +197,11 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
               <span className="w-2 h-2 rounded-full bg-[#7A9E7E] animate-soft-pulse" />
               <span className="font-semibold text-[#2D3142]">
                 {shift === 'shift_b'
-                  ? (language === 'en' ? 'Shift B (9 AM Outage)' : 'အလှည့် B (မနက် ၉ နာရီပျက်)')
-                  : (language === 'en' ? 'Shift A (5 AM Outage)' : 'အလှည့် A (မနက် ၅ နာရီပျက်)')}
+                  ? (language === 'en' ? 'Shift B (9 AM – 1 PM Outage)' : 'အလှည့် B (မနက် ၉-၁ မီးပျက်)')
+                  : (language === 'en' ? 'Shift A (5 AM – 9 AM Outage · 9 AM Back)' : 'အလှည့် A (မနက် ၅-၉ မီးပျက် · ၉ နာရီ မီးလာ)')}
+              </span>
+              <span className="text-[10px] text-[#7A9E7E] font-medium bg-[#EBF3EC] px-2 py-0.5 rounded-full border border-[#7A9E7E]/30">
+                {language === 'en' ? 'Daily Alternation' : 'တရက်စီ အလှည့်ကျ'}
               </span>
             </div>
             <button
@@ -167,14 +228,16 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
               </div>
               {isSimulated && (
                 <button
+                  type="button"
                   onClick={() => {
                     onResetToLive();
+                    setShowTimeSlider(false);
                     soundManager.playCutePop();
                   }}
-                  className="cute-press text-xs text-[#E2847A] hover:underline flex items-center gap-1 font-medium"
+                  className="cute-press px-3 py-1.5 rounded-xl bg-[#7A9E7E] hover:bg-[#688B6C] text-white text-xs font-bold flex items-center gap-1.5 shadow-xs"
                 >
-                  <RotateCcw className="w-3 h-3" />
-                  {language === 'en' ? 'Sync Live Myanmar Time' : 'လက်ရှိ မြန်မာစံတော်ချိန်သို့ ပြန်ထားရန်'}
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  <span>{language === 'en' ? 'Reset to Live MMT' : 'လက်ရှိအချိန် ပြန်ထားရန်'}</span>
                 </button>
               )}
             </div>

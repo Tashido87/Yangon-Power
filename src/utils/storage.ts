@@ -1,36 +1,75 @@
 import { Language, ShiftType } from '../types';
+import { getLiveMyanmarTime } from './scheduleCalculator';
 
 export interface StoredSettings {
   shift: ShiftType;
+  rotationMode: 'auto' | 'manual';
   hasEveningOutage: boolean;
   language: Language;
   isSoundEnabled: boolean;
 }
 
-const STORAGE_KEY = 'komorebi_power_settings_v1';
+const STORAGE_KEY = 'yangon_power_settings_v4';
+const LEGACY_STORAGE_KEY = 'yangon_power_settings_v3';
 
 export const DEFAULT_SETTINGS: StoredSettings = {
-  shift: 'shift_b',
-  hasEveningOutage: false, // Default: false as user explicitly requested "ညနေ ၅ ဆို မီးမပျက်တော့ဘူးနော်။ လောလောဆယ်"
+  shift: 'shift_a', // Today (Oct 7) is Shift A
+  rotationMode: 'auto', // Default: Auto daily alternating rotation
+  hasEveningOutage: true, // 5 PM - 9 PM evening outage is active
   language: 'my',
   isSoundEnabled: true,
 };
 
 export function loadStoredSettings(): StoredSettings {
-  if (typeof window === 'undefined') return DEFAULT_SETTINGS;
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return DEFAULT_SETTINGS;
-    const parsed = JSON.parse(raw);
+  const liveMmt = getLiveMyanmarTime();
+  if (typeof window === 'undefined') {
     return {
-      shift: parsed.shift === 'shift_a' ? 'shift_a' : 'shift_b',
-      hasEveningOutage: typeof parsed.hasEveningOutage === 'boolean' ? parsed.hasEveningOutage : false,
+      ...DEFAULT_SETTINGS,
+      shift: liveMmt.autoShift,
+    };
+  }
+
+  try {
+    let raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      // Check previous key for language/sound migration
+      const legacyRaw = localStorage.getItem(LEGACY_STORAGE_KEY) || localStorage.getItem('komorebi_power_settings_v1');
+      if (legacyRaw) {
+        const legacyParsed = JSON.parse(legacyRaw);
+        const migrated: StoredSettings = {
+          shift: liveMmt.autoShift, // Use today's correct auto-shift (Oct 7 = Shift A)
+          rotationMode: 'auto',
+          hasEveningOutage: true,
+          language: legacyParsed.language === 'en' ? 'en' : 'my',
+          isSoundEnabled: typeof legacyParsed.isSoundEnabled === 'boolean' ? legacyParsed.isSoundEnabled : true,
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
+        return migrated;
+      }
+      return {
+        ...DEFAULT_SETTINGS,
+        shift: liveMmt.autoShift,
+      };
+    }
+    const parsed = JSON.parse(raw);
+    const rotationMode = parsed.rotationMode === 'manual' ? 'manual' : 'auto';
+    const computedShift: ShiftType = rotationMode === 'auto'
+      ? liveMmt.autoShift
+      : (parsed.shift === 'shift_b' ? 'shift_b' : 'shift_a');
+
+    return {
+      shift: computedShift,
+      rotationMode,
+      hasEveningOutage: typeof parsed.hasEveningOutage === 'boolean' ? parsed.hasEveningOutage : true,
       language: parsed.language === 'en' ? 'en' : 'my',
       isSoundEnabled: typeof parsed.isSoundEnabled === 'boolean' ? parsed.isSoundEnabled : true,
     };
   } catch (e) {
     console.warn('Failed to parse settings from localStorage', e);
-    return DEFAULT_SETTINGS;
+    return {
+      ...DEFAULT_SETTINGS,
+      shift: liveMmt.autoShift,
+    };
   }
 }
 

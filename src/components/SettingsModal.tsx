@@ -7,7 +7,8 @@ interface SettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
   shift: ShiftType;
-  onShiftChange: (shift: ShiftType) => void;
+  rotationMode?: 'auto' | 'manual';
+  onShiftChange: (shift: ShiftType, mode?: 'auto' | 'manual') => void;
   hasEveningOutage: boolean;
   onToggleEveningOutage: (val: boolean) => void;
   language: Language;
@@ -20,6 +21,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   isOpen,
   onClose,
   shift,
+  rotationMode = 'auto',
   onShiftChange,
   hasEveningOutage,
   onToggleEveningOutage,
@@ -63,60 +65,68 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         </div>
 
         {/* Section 1: Power Shift Selection */}
-        <div className="space-y-2">
-          <label className="text-xs font-bold text-[#2D3142] flex items-center gap-1.5">
-            <Zap className="w-3.5 h-3.5 text-[#7A9E7E]" />
-            <span>{language === 'en' ? 'Daily Power Shift Rotation:' : 'မီးပေးအလှည့်ကျစနစ် ရွေးချယ်ရန် -'}</span>
-          </label>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            {/* Shift B */}
-            <button
-              type="button"
-              onClick={() => {
-                onShiftChange('shift_b');
-                soundManager.playCutePop();
-              }}
-              className={`cute-press p-3 rounded-2xl text-left border transition-all ${
-                shift === 'shift_b'
-                  ? 'bg-[#FAF7F2] border-[#7A9E7E] text-[#2D3142] shadow-xs ring-2 ring-[#7A9E7E]/10'
-                  : 'bg-white border-[#EAE6DF] text-[#6C727F] hover:bg-[#FAF7F2]/60'
-              }`}
-            >
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-xs font-bold text-[#2D3142]">
-                  {language === 'en' ? 'Shift B (9 AM Cut)' : 'အလှည့် B (မနက် ၉ နာရီပျက်)'}
-                </span>
-                {shift === 'shift_b' && (
-                  <span className="w-4 h-4 rounded-full bg-[#7A9E7E] text-white flex items-center justify-center">
-                    <Check className="w-2.5 h-2.5" />
-                  </span>
-                )}
-              </div>
-              <p className="text-[11px] text-[#727885] leading-relaxed">
-                {language === 'en'
-                  ? '9 AM Outage → 1 PM Power Back'
-                  : 'မနက် ၉:၀၀ ပျက်ပြီး နေ့လယ် ၁:၀၀ နာရီ မီးပြန်လာသည်'}
-              </p>
-            </button>
+        <div className="space-y-2.5">
+          <div className="flex items-center justify-between">
+            <label className="text-xs font-bold text-[#2D3142] flex items-center gap-1.5">
+              <Zap className="w-3.5 h-3.5 text-[#7A9E7E]" />
+              <span>{language === 'en' ? 'Daily Power Shift Rotation:' : 'မီးပေးအလှည့်ကျစနစ် (တရက်စီ အလှည့်ကျ) -'}</span>
+            </label>
+            {rotationMode === 'auto' && (
+              <span className="text-[10px] text-[#7A9E7E] font-semibold bg-[#EBF3EC] px-2 py-0.5 rounded-full border border-[#7A9E7E]/30">
+                {language === 'en' ? 'Auto Rotation Active' : 'အလိုအလျောက် အလှည့်ကျစနစ်'}
+              </span>
+            )}
+          </div>
 
+          {/* Auto Mode Card */}
+          <button
+            type="button"
+            onClick={() => {
+              onShiftChange('shift_a', 'auto');
+              soundManager.playCutePop();
+            }}
+            className={`w-full cute-press p-3 rounded-2xl text-left border transition-all ${
+              rotationMode === 'auto'
+                ? 'bg-[#EBF3EC]/60 border-[#7A9E7E] text-[#2D3142] ring-2 ring-[#7A9E7E]/10'
+                : 'bg-white border-[#EAE6DF] text-[#6C727F] hover:bg-[#FAF7F2]/60'
+            }`}
+          >
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-xs font-bold text-[#2D3142] flex items-center gap-1.5">
+                <span>🔄 {language === 'en' ? 'Auto Daily Alternation (Recommended)' : 'အလိုအလျောက် တရက်စီ အလှည့်ကျစနစ် (သတ်မှတ်ထားသည်)'}</span>
+              </span>
+              {rotationMode === 'auto' && (
+                <span className="w-4 h-4 rounded-full bg-[#7A9E7E] text-white flex items-center justify-center">
+                  <Check className="w-2.5 h-2.5" />
+                </span>
+              )}
+            </div>
+            <p className="text-[11px] text-[#6C727F] leading-relaxed">
+              {language === 'en'
+                ? 'Yesterday 9-1 Cut → Today 5-9 Cut (9 AM Power Back) → Alternates daily.'
+                : 'မနေ့က ၉-၁ မီးပျက်လျှင် ယနေ့ ၅-၉ မီးပျက်ပြီး ၉:၀၀ မီးပြန်လာမည် (ရက်အလိုက် အလိုအလျောက် ပြောင်းလဲပေးပါသည်)။'}
+            </p>
+          </button>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             {/* Shift A */}
             <button
               type="button"
               onClick={() => {
-                onShiftChange('shift_a');
+                onShiftChange('shift_a', 'manual');
                 soundManager.playCutePop();
               }}
               className={`cute-press p-3 rounded-2xl text-left border transition-all ${
-                shift === 'shift_a'
+                shift === 'shift_a' && rotationMode !== 'auto'
                   ? 'bg-[#FAF7F2] border-[#7A9E7E] text-[#2D3142] shadow-xs ring-2 ring-[#7A9E7E]/10'
                   : 'bg-white border-[#EAE6DF] text-[#6C727F] hover:bg-[#FAF7F2]/60'
               }`}
             >
               <div className="flex items-center justify-between mb-1">
                 <span className="text-xs font-bold text-[#2D3142]">
-                  {language === 'en' ? 'Shift A (5 AM Cut · Night ON)' : 'အလှည့် A (မနက် ၅ နာရီပျက်)'}
+                  {language === 'en' ? 'Shift A (5 AM Outage · 9 AM Back)' : 'အလှည့် A (မနက် ၅ နာရီပျက် · ၉ နာရီလာ)'}
                 </span>
-                {shift === 'shift_a' && (
+                {shift === 'shift_a' && rotationMode !== 'auto' && (
                   <span className="w-4 h-4 rounded-full bg-[#7A9E7E] text-white flex items-center justify-center">
                     <Check className="w-2.5 h-2.5" />
                   </span>
@@ -128,29 +138,59 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   : '၅ နာရီပျက် → ၉ နာရီလာ → ၁ နာရီပျက် → ၅ နာရီလာ (ညမပျက်)'}
               </p>
             </button>
+
+            {/* Shift B */}
+            <button
+              type="button"
+              onClick={() => {
+                onShiftChange('shift_b', 'manual');
+                soundManager.playCutePop();
+              }}
+              className={`cute-press p-3 rounded-2xl text-left border transition-all ${
+                shift === 'shift_b' && rotationMode !== 'auto'
+                  ? 'bg-[#FAF7F2] border-[#7A9E7E] text-[#2D3142] shadow-xs ring-2 ring-[#7A9E7E]/10'
+                  : 'bg-white border-[#EAE6DF] text-[#6C727F] hover:bg-[#FAF7F2]/60'
+              }`}
+            >
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-bold text-[#2D3142]">
+                  {language === 'en' ? 'Shift B (9 AM Outage · 1 PM Back)' : 'အလှည့် B (မနက် ၉ နာရီပျက် · ၁ နာရီလာ)'}
+                </span>
+                {shift === 'shift_b' && rotationMode !== 'auto' && (
+                  <span className="w-4 h-4 rounded-full bg-[#7A9E7E] text-white flex items-center justify-center">
+                    <Check className="w-2.5 h-2.5" />
+                  </span>
+                )}
+              </div>
+              <p className="text-[11px] text-[#727885] leading-relaxed">
+                {language === 'en'
+                  ? '9 AM Cut → 1 PM Back → 5 PM Cut → 9 PM Back'
+                  : '၉ နာရီပျက် → ၁ နာရီလာ → ၅ နာရီပျက် → ၉ နာရီလာ'}
+              </p>
+            </button>
           </div>
         </div>
 
-        {/* Section 2: Evening 5:00 PM Outage Toggle */}
+        {/* Section 2: Evening 5:00 PM - 9:00 PM Outage Toggle */}
         <div className="p-3.5 rounded-2xl bg-[#FAF7F2] border border-[#EAE6DF] space-y-2">
           <div className="flex items-center justify-between gap-3">
             <div>
               <div className="text-xs font-bold text-[#2D3142] flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-[#4A90E2]" />
+                <Sparkles className="w-3.5 h-3.5 text-[#E2847A]" />
                 <span>
                   {language === 'en'
-                    ? 'Evening 5:00 PM Outage Status'
-                    : 'ညနေ ၅ နာရီ မီးပျက်မှု အခြေအနေ'}
+                    ? 'Evening 5:00 PM – 9:00 PM Outage'
+                    : 'ညနေ ၅:၀၀ မှ ၉:၀၀ မီးပျက်ချိန်'}
                 </span>
               </div>
               <p className="text-[11px] text-[#727885] mt-0.5 leading-relaxed">
-                {!hasEveningOutage
+                {hasEveningOutage
                   ? (language === 'en'
-                      ? 'Currently active: Evening power stays ON.'
-                      : 'လက်ရှိအခြေအနေ - ညနေပိုင်းတွင် မီးဆက်လက်ရရှိနေပါမည်။')
+                      ? '5:00 PM – 9:00 PM Outage is active (Power back at 9:00 PM).'
+                      : 'ညနေ ၅:၀၀ မှ ည ၉:၀၀ ထိ မီးပျက်ပါမည် (ည ၉:၀၀ မီးပြန်လာမည်)။')
                   : (language === 'en'
-                      ? '5:00 PM – 9:00 PM Outage is enabled'
-                      : 'ညနေ ၅:၀၀ မှ ၉:၀၀ အထိ မီးပျက်ပါမည်။')}
+                      ? 'No 5 PM outage: Evening power remains ON.'
+                      : 'ညနေ ၅ နာရီ မီးမပျက်ဘဲ ဆက်လက်ရရှိနေမည်။')}
               </p>
             </div>
 
@@ -162,26 +202,26 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 soundManager.playCutePop();
               }}
               className={`w-12 h-6 rounded-full transition-colors relative flex items-center px-1 shrink-0 ${
-                !hasEveningOutage ? 'bg-[#7A9E7E]' : 'bg-[#D1D5DB]'
+                hasEveningOutage ? 'bg-[#7A9E7E]' : 'bg-[#D1D5DB]'
               }`}
-              title="Toggle 5 PM Outage"
+              title="Toggle Evening Outage"
             >
               <div
                 className={`w-4 h-4 rounded-full bg-white shadow-xs transition-transform ${
-                  !hasEveningOutage ? 'translate-x-6' : 'translate-x-0'
+                  hasEveningOutage ? 'translate-x-6' : 'translate-x-0'
                 }`}
               />
             </button>
           </div>
 
-          <div className="text-[10px] text-[#8AA399] bg-white/80 p-2 rounded-xl border border-[#EFECE6] flex items-center justify-between">
-            <span>
-              {!hasEveningOutage
-                ? (language === 'en' ? '✨ Evening power remains ON' : '✨ ညနေပိုင်း မီးလာနေပါမည်')
-                : (language === 'en' ? '⚠️ 5 PM – 9 PM Outage Scheduled' : '⚠️ ညနေ ၅ – ၉ မီးပျက်ပါမည်')}
+          <div className="text-[10px] bg-white/80 p-2 rounded-xl border border-[#EFECE6] flex items-center justify-between">
+            <span className={hasEveningOutage ? 'text-[#B8574B] font-medium' : 'text-[#7A9E7E] font-medium'}>
+              {hasEveningOutage
+                ? (language === 'en' ? '⚠️ 5 PM – 9 PM Outage Active' : '⚠️ ညနေ ၅ – ၉ မီးပျက်သည် (ည ၉ မီးလာ)')
+                : (language === 'en' ? '✨ Evening power remains ON' : '✨ ညနေပိုင်း မီးဆက်လာမည်')}
             </span>
             <span className="font-semibold text-[#7A9E7E]">
-              {!hasEveningOutage ? (language === 'en' ? 'Active' : 'သတ်မှတ်ထားသည်') : ''}
+              {language === 'en' ? 'Active' : 'သတ်မှတ်ထားသည်'}
             </span>
           </div>
         </div>
