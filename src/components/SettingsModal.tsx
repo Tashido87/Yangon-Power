@@ -2,6 +2,7 @@ import React from 'react';
 import { X, Settings, Check, Zap, Moon, Volume2, VolumeX, Languages, Sparkles } from 'lucide-react';
 import { Language, ShiftType } from '../types';
 import { soundManager } from '../utils/audio';
+import { PWAInstallButton } from './PWAInstallButton';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -302,6 +303,26 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               </button>
             </div>
           </div>
+        </div>
+
+        {/* Section 4: Add to Home Screen (PWA) */}
+        <div className="p-3.5 rounded-2xl bg-[#FAF7F2] border border-[#EAE6DF] flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <img 
+              src="/pwa-192x192.png" 
+              alt="Mascot Icon" 
+              className="w-10 h-10 rounded-xl border border-[#EAE6DF] object-contain p-0.5 bg-white shadow-2xs shrink-0"
+            />
+            <div>
+              <div className="text-xs font-bold text-[#2D3142]">
+                {language === 'en' ? 'Add to Home Screen' : 'ဖုန်း Screen ပေါ်သို့ Icon ထည့်ရန်'}
+              </div>
+              <div className="text-[11px] text-[#727885]">
+                {language === 'en' ? 'Install with mascot icon' : 'မီးစက်ပုံ icon လေးဖြင့် အသုံးပြုရန်'}
+              </div>
+            </div>
+          </div>
+          <PWAInstallButton language={language} />
         </div>
 
         {/* Persistence Notice */}

@@ -2,6 +2,7 @@ import React from 'react';
 import { Volume2, VolumeX, Languages, Settings } from 'lucide-react';
 import { Language } from '../types';
 import { soundManager } from '../utils/audio';
+import { PWAInstallButton } from './PWAInstallButton';
 
 interface HeaderProps {
   language: Language;
@@ -21,16 +22,23 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header className="sticky top-0 z-30 w-full bg-[#FAF7F2]/90 backdrop-blur-md border-b border-[#EFECE6] px-4 sm:px-6 py-3 transition-colors">
       <div className="max-w-3xl mx-auto flex items-center justify-between gap-3">
-        {/* Brand mark */}
-        <div className="flex items-center gap-2">
+        {/* Brand mark with cute generator mascot icon */}
+        <div className="flex items-center gap-2.5">
+          <img 
+            src="/pwa-192x192.png" 
+            alt="Yangon Power Mascot" 
+            className="w-8 h-8 rounded-xl border border-[#EAE6DF] shadow-2xs object-contain bg-white p-0.5" 
+          />
           <div className="font-display text-lg sm:text-xl font-bold tracking-tight text-[#2D3142] flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#7A9E7E] inline-block animate-soft-pulse" />
             <span>Yangon Power</span>
           </div>
         </div>
 
-        {/* Quick Tools: Sound, Language & Setting */}
+        {/* Quick Tools: Install, Sound, Language & Setting */}
         <div className="flex items-center gap-2">
+          {/* Add to Home Screen / Install Button */}
+          <PWAInstallButton language={language} compact />
+
           {/* Sound / Vibration Toggle Button */}
           <button
             onClick={() => {
