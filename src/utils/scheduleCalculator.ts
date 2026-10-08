@@ -12,27 +12,16 @@ export interface DailyScheduleTransition {
   badgeMy: string;
 }
 
-// SHIFT B (9:00 AM - 1:00 PM & 5:00 PM - 9:00 PM Outage, 1:00 PM - 5:00 PM & 9:00 PM+ Power Restored)
+// SHIFT B (9:00 AM - 1:00 PM & 5:00 PM - 9:00 PM Outage, 1:00 PM - 5:00 PM & 9:00 PM+ Power Restored, ညမီးမပျက်ပါ)
 export const TRANSITIONS_SHIFT_B: DailyScheduleTransition[] = [
   {
     hour: 0,
     minute: 0,
     totalMinutes: 0,
-    state: 'NIGHT_SHUTDOWN',
-    slotId: null,
-    labelEn: 'Night Rest Period (Generator shut down)',
-    labelMy: 'ညဘက်အိပ်ချိန် (မီးစက်လုံးဝပိတ်ထားသည်)',
-    badgeEn: 'Night Rest / Generator Off',
-    badgeMy: 'ညဘက်အိပ်ချိန် / မီးစက်ပိတ်',
-  },
-  {
-    hour: 6,
-    minute: 0,
-    totalMinutes: 360,
     state: 'GRID_NORMAL',
     slotId: null,
-    labelEn: 'Morning Grid Power Active (06:00 AM – 09:00 AM)',
-    labelMy: 'မနက်ပိုင်း အစိုးရမီးရရှိချိန် (မနက် ၆:၀၀ မှ ၉:၀၀ အထိ)',
+    labelEn: 'Overnight Grid Power Active (Until 09:00 AM)',
+    labelMy: 'ညဘက် အစိုးရမီး ရရှိချိန် (မနက် ၉:၀၀ အထိ မီးမပျက်ပါ)',
     badgeEn: 'Grid Power Normal',
     badgeMy: 'အစိုးရမီး ရရှိနေသည်',
   },
@@ -97,21 +86,10 @@ export const TRANSITIONS_SHIFT_B: DailyScheduleTransition[] = [
     totalMinutes: 1260,
     state: 'GRID_NORMAL',
     slotId: null,
-    labelEn: 'Power Restored at 9:00 PM · Night Grid Active',
-    labelMy: 'ည ၉:၀၀ နာရီ မီးပြန်လာပါပြီ · ညဘက် အစိုးရမီး ရရှိချိန်',
-    badgeEn: 'Grid Power Restored (9:00 PM)',
+    labelEn: 'Power Restored at 9:00 PM · Night Grid Active (No Night Outage)',
+    labelMy: 'ည ၉:၀၀ နာရီ မီးပြန်လာပါပြီ · ညဘက်မီးမပျက်ပါ (အစိုးရမီး ရရှိနေသည်)',
+    badgeEn: 'Grid Power Restored',
     badgeMy: 'မီးပြန်လာသည် / အစိုးရမီး',
-  },
-  {
-    hour: 23,
-    minute: 0,
-    totalMinutes: 1380,
-    state: 'NIGHT_SHUTDOWN',
-    slotId: null,
-    labelEn: 'Night Rest Period (11:00 PM – 06:00 AM)',
-    labelMy: 'ညဘက် မီးစက်ရပ်နားချိန် (ည ၁၁:၀၀ မှ မနက် ၆:၀၀ အထိ)',
-    badgeEn: 'Night Rest / Generator Off',
-    badgeMy: 'ညဘက်အိပ်ချိန် / မီးစက်ပိတ်',
   },
 ];
 
@@ -121,12 +99,12 @@ export const TRANSITIONS_SHIFT_A: DailyScheduleTransition[] = [
     hour: 0,
     minute: 0,
     totalMinutes: 0,
-    state: 'NIGHT_SHUTDOWN',
+    state: 'GRID_NORMAL',
     slotId: null,
-    labelEn: 'Night Rest Period (Generator shut down)',
-    labelMy: 'ညဘက်အိပ်ချိန် (မီးစက်လုံးဝပိတ်ထားသည်)',
-    badgeEn: 'Night Rest / Generator Off',
-    badgeMy: 'ညဘက်အိပ်ချိန် / မီးစက်ပိတ်',
+    labelEn: 'Early Morning Grid Power Active (Until 05:00 AM)',
+    labelMy: 'မနက်စောစော အစိုးရမီး ရရှိချိန် (မနက် ၅:၀၀ အထိ မီးမပျက်ပါ)',
+    badgeEn: 'Grid Power Normal',
+    badgeMy: 'အစိုးရမီး ရရှိနေသည်',
   },
   {
     hour: 5,
@@ -211,45 +189,23 @@ export const TRANSITIONS_SHIFT_A: DailyScheduleTransition[] = [
     totalMinutes: 1020,
     state: 'GRID_NORMAL',
     slotId: null,
-    labelEn: 'Power Restored (05:00 PM – 11:00 PM) · ညမပျက်',
+    labelEn: 'Power Restored at 05:00 PM · ညမပျက် (No Night Outage)',
     labelMy: 'ညနေ ၅ နာရီ မီးပြန်လာပါပြီ · ညမပျက် (အစိုးရမီး ရရှိချိန်)',
     badgeEn: 'Grid Power Restored (No Night Outage)',
     badgeMy: 'မီးပြန်လာသည် / ညမပျက်',
   },
-  {
-    hour: 23,
-    minute: 0,
-    totalMinutes: 1380,
-    state: 'NIGHT_SHUTDOWN',
-    slotId: null,
-    labelEn: 'Night Rest Period (11:00 PM – 05:00 AM)',
-    labelMy: 'ညဘက် မီးစက်ရပ်နားချိန် (ည ၁၁:၀၀ မှ မနက် ၅:၀၀ အထိ)',
-    badgeEn: 'Night Rest / Generator Off',
-    badgeMy: 'ညဘက်အိပ်ချိန် / မီးစက်ပိတ်',
-  },
 ];
 
-// SHIFT B without 5:00 PM outage (Power returned at 1:00 PM and stays active throughout the evening!)
+// SHIFT B without 5:00 PM outage (Power returned at 1:00 PM and stays active throughout the evening and night!)
 export const TRANSITIONS_SHIFT_B_NO_EVENING: DailyScheduleTransition[] = [
   {
     hour: 0,
     minute: 0,
     totalMinutes: 0,
-    state: 'NIGHT_SHUTDOWN',
-    slotId: null,
-    labelEn: 'Night Rest Period (Generator shut down)',
-    labelMy: 'ညဘက်အိပ်ချိန် (မီးစက်လုံးဝပိတ်ထားသည်)',
-    badgeEn: 'Night Rest / Generator Off',
-    badgeMy: 'ညဘက်အိပ်ချိန် / မီးစက်ပိတ်',
-  },
-  {
-    hour: 6,
-    minute: 0,
-    totalMinutes: 360,
     state: 'GRID_NORMAL',
     slotId: null,
-    labelEn: 'Morning Grid Power Active (06:00 AM – 09:00 AM)',
-    labelMy: 'မနက်ပိုင်း အစိုးရမီးရရှိချိန် (မနက် ၆:၀၀ မှ ၉:၀၀ အထိ)',
+    labelEn: 'Overnight Grid Power Active (Until 09:00 AM)',
+    labelMy: 'ညဘက် အစိုးရမီး ရရှိချိန် (မနက် ၉:၀၀ အထိ မီးမပျက်ပါ)',
     badgeEn: 'Grid Power Normal',
     badgeMy: 'အစိုးရမီး ရရှိနေသည်',
   },
@@ -281,8 +237,8 @@ export const TRANSITIONS_SHIFT_B_NO_EVENING: DailyScheduleTransition[] = [
     totalMinutes: 780,
     state: 'GRID_NORMAL',
     slotId: null,
-    labelEn: 'Power Restored at 01:00 PM · Evening Grid Power Active',
-    labelMy: 'နေ့လယ် ၁:၀၀ နာရီ မီးပြန်လာပါပြီ · အစိုးရမီး ရရှိနေသည်',
+    labelEn: 'Power Restored at 01:00 PM · Evening Grid Power Active (No Night Outage)',
+    labelMy: 'နေ့လယ် ၁:၀၀ နာရီ မီးပြန်လာပါပြီ · အစိုးရမီး ရရှိနေသည် (ညမပျက်)',
     badgeEn: 'Grid Power Restored',
     badgeMy: 'မီးပြန်လာသည် / အစိုးရမီး',
   },
@@ -323,10 +279,10 @@ export function calculateStatus(
 
   let nextEvent: NextEventInfo;
 
-  // Specific rule for Shift B when evening outage is off (1:00 PM onwards):
-  // Power is back at 1:00 PM and won't cut at 5:00 PM.
+  // Case 1: Shift B with evening outage (after 21:00 / 9:00 PM):
+  // Power returned at 9:00 PM and there is no night outage.
   // The next power outage is TOMORROW MORNING at 05:00 AM (Shift A)!
-  if (shift === 'shift_b' && !hasEveningOutage && currentTotalMinutes >= 780) {
+  if (shift === 'shift_b' && hasEveningOutage && currentTotalMinutes >= 1260) {
     const remainingToday = 86400 - currentTotalSeconds;
     const tomorrow5AmSeconds = 5 * 3600;
     const secondsRemaining = remainingToday + tomorrow5AmSeconds;
@@ -335,15 +291,35 @@ export function calculateStatus(
       type: 'OUTAGE_STANDBY',
       targetHour: 5,
       targetMinute: 0,
-      eventDescriptionEn: 'Tomorrow 05:00 AM · Next Power Outage',
-      eventDescriptionMy: 'မနက်ဖြန် မနက် ၅:၀၀ (မီးပျက်ချိန်)',
+      eventDescriptionEn: 'Tomorrow 05:00 AM · Next Power Outage (Shift A)',
+      eventDescriptionMy: 'မနက်ဖြန် မနက် ၅:၀၀ (မီးပျက်ချိန် - အလှည့် A)',
+      secondsRemaining: Math.max(0, secondsRemaining),
+      timeString: '05:00 AM (Tomorrow)',
+      timeStringEn: '05:00 AM (Tomorrow)',
+      timeStringMy: 'မနက် ၅:၀၀ (မနက်ဖြန်)',
+    };
+  } else if (shift === 'shift_b' && !hasEveningOutage && currentTotalMinutes >= 780) {
+    // Case 2: Shift B when evening outage is off (1:00 PM onwards):
+    // Power is back at 1:00 PM and won't cut at 5:00 PM. No night outage.
+    // The next power outage is TOMORROW MORNING at 05:00 AM (Shift A)!
+    const remainingToday = 86400 - currentTotalSeconds;
+    const tomorrow5AmSeconds = 5 * 3600;
+    const secondsRemaining = remainingToday + tomorrow5AmSeconds;
+
+    nextEvent = {
+      type: 'OUTAGE_STANDBY',
+      targetHour: 5,
+      targetMinute: 0,
+      eventDescriptionEn: 'Tomorrow 05:00 AM · Next Power Outage (Shift A)',
+      eventDescriptionMy: 'မနက်ဖြန် မနက် ၅:၀၀ (မီးပျက်ချိန် - အလှည့် A)',
       secondsRemaining: Math.max(0, secondsRemaining),
       timeString: '05:00 AM (Tomorrow)',
       timeStringEn: '05:00 AM (Tomorrow)',
       timeStringMy: 'မနက် ၅:၀၀ (မနက်ဖြန်)',
     };
   } else if (shift === 'shift_a' && currentTotalMinutes >= 1020) {
-    // In Shift A, after 17:00 (5:00 PM), power returned and night is on!
+    // Case 3: Shift A after 17:00 (5:00 PM):
+    // In Shift A, after 17:00 (5:00 PM), power returned and night is on (ညမပျက်)!
     // Next outage is tomorrow morning at 09:00 AM (Shift B)!
     const remainingToday = 86400 - currentTotalSeconds;
     const tomorrow9AmSeconds = 9 * 3600;
@@ -353,8 +329,8 @@ export function calculateStatus(
       type: 'OUTAGE_STANDBY',
       targetHour: 9,
       targetMinute: 0,
-      eventDescriptionEn: 'Tomorrow 09:00 AM · Next Power Outage',
-      eventDescriptionMy: 'မနက်ဖြန် မနက် ၉:၀၀ (မီးပျက်ချိန်)',
+      eventDescriptionEn: 'Tomorrow 09:00 AM · Next Power Outage (Shift B)',
+      eventDescriptionMy: 'မနက်ဖြန် မနက် ၉:၀၀ (မီးပျက်ချိန် - အလှည့် B)',
       secondsRemaining: Math.max(0, secondsRemaining),
       timeString: '09:00 AM (Tomorrow)',
       timeStringEn: '09:00 AM (Tomorrow)',
@@ -402,7 +378,8 @@ export function calculateStatus(
     }
   }
 
-  const isNightRest = hour >= 23 || (shift === 'shift_b' ? hour < 6 : hour < 5);
+  // User confirmed: no night rest / quiet hours currently exist because 9 PM to 5 AM power doesn't cut.
+  const isNightRest = false;
   const generatorIsActive = activeTransition.state === 'GEN_RUNNING';
   const powerIsOut = activeTransition.state === 'OUTAGE_STANDBY';
 

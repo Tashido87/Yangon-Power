@@ -73,16 +73,17 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
     { label: '05:30 PM', desc: language === 'en' ? 'Evening Standby' : 'ညနေ နားချိန်', h: 17, m: 30 },
     { label: '07:00 PM', desc: language === 'en' ? 'Evening Gen' : 'ညနေ မီးစက်', h: 19, m: 0 },
     { label: '09:30 PM', desc: language === 'en' ? 'Power Back!' : 'ည ၉ နာရီ မီးလာချိန်', h: 21, m: 30 },
-    { label: '11:45 PM', desc: language === 'en' ? 'Night Rest' : 'ညဘက်အိပ်ချိန်', h: 23, m: 45 },
+    { label: '11:30 PM', desc: language === 'en' ? 'Night Grid' : 'ညဘက် အစိုးရမီး', h: 23, m: 30 },
   ];
 
   const presetsShiftA = [
+    { label: '02:00 AM', desc: language === 'en' ? 'Night Grid' : 'ညဘက် အစိုးရမီး', h: 2, m: 0 },
     { label: '07:30 AM', desc: language === 'en' ? 'Morning Gen' : 'မနက် မီးစက်', h: 7, m: 30 },
     { label: '10:00 AM', desc: language === 'en' ? 'Power Back!' : '၉ နာရီ မီးလာချိန်', h: 10, m: 0 },
     { label: '01:30 PM', desc: language === 'en' ? 'Outage Standby' : '၁ နာရီ ပြန်ပျက်', h: 13, m: 30 },
     { label: '02:30 PM', desc: language === 'en' ? 'Afternoon Gen' : 'နေ့လယ် မီးစက်', h: 14, m: 30 },
     { label: '06:00 PM', desc: language === 'en' ? 'Night On' : 'ညနေ ၅ မီးလာ (ညမပျက်)', h: 18, m: 0 },
-    { label: '11:45 PM', desc: language === 'en' ? 'Night Rest' : 'ညဘက်အိပ်ချိန်', h: 23, m: 45 },
+    { label: '11:30 PM', desc: language === 'en' ? 'Night Grid' : 'ညဘက် အစိုးရမီး', h: 23, m: 30 },
   ];
 
   const activePresets = shift === 'shift_a' ? presetsShiftA : presetsShiftB;
@@ -258,7 +259,7 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
                 className="w-full h-2 bg-[#E5E0D8] rounded-lg appearance-none cursor-pointer accent-[#7A9E7E]"
               />
               <div className="flex justify-between text-[10px] text-[#8AA399] font-medium tabular-nums">
-                <span>00:00 (Night)</span>
+                <span>00:00</span>
                 <span>06:00</span>
                 <span>12:00</span>
                 <span>18:00</span>

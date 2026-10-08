@@ -23,37 +23,32 @@ interface Segment {
 }
 
 const SEGMENTS_SHIFT_B: Segment[] = [
-  { start: 0, end: 6, type: 'night', labelEn: 'Night Rest (11PM-6AM)', labelMy: 'ညဘက်အိပ်ချိန် (၁၁-၆ မနက်)' },
-  { start: 6, end: 9, type: 'grid', labelEn: 'Morning Grid Power (6AM-9AM)', labelMy: 'မနက် အစိုးရမီး (၆-၉ မနက်)' },
-  { start: 9, end: 11, type: 'standby', labelEn: 'Outage Standby (9AM-11AM)', labelMy: 'မီးပျက် / နားချိန် (၉-၁၁ မနက်)' },
-  { start: 11, end: 13, type: 'gen', labelEn: 'Lunch Generator (11AM-1PM)', labelMy: 'နေ့လယ် မီးစက် (၁၁-၁ နေ့လယ်)' },
-  { start: 13, end: 17, type: 'grid', labelEn: 'Power Restored (1PM-5PM) · EPC Grid Active', labelMy: 'မီးပြန်လာပါပြီ (၁-၅ ညနေ) · အစိုးရမီးရရှိချိန်' },
-  { start: 17, end: 18, type: 'standby', labelEn: 'Evening Standby (5PM-6PM)', labelMy: 'ညနေ နားချိန် (၅-၆ ညနေ)' },
-  { start: 18, end: 21, type: 'gen', labelEn: 'Evening Peak Generator (6PM-9PM)', labelMy: 'ညနေ မီးစက် (၆-၉ ည)' },
-  { start: 21, end: 23, type: 'grid', labelEn: 'Power Restored (9PM-11PM) · Night Grid Active', labelMy: 'ည ၉ နာရီ မီးပြန်လာသည် (၉-၁၁ ည) · အစိုးရမီး' },
-  { start: 23, end: 24, type: 'night', labelEn: 'Night Rest (11PM-12AM)', labelMy: 'ညဘက်အိပ်ချိန် (၁၁-၁၂ ည)' },
+  { start: 0, end: 9, type: 'grid', labelEn: 'Mains Grid (12 AM – 9 AM) · No Night Outage', labelMy: 'အစိုးရမီး (ည ၁၂ မှ မနက် ၉ နာရီ) · ညမီးမပျက်ပါ' },
+  { start: 9, end: 11, type: 'standby', labelEn: 'Outage Standby (9 AM – 11 AM)', labelMy: 'မီးပျက် / နားချိန် (၉-၁၁ မနက်)' },
+  { start: 11, end: 13, type: 'gen', labelEn: 'Lunch Generator (11 AM – 1 PM)', labelMy: 'နေ့လယ် မီးစက် (၁၁-၁ နေ့လယ်)' },
+  { start: 13, end: 17, type: 'grid', labelEn: 'Power Restored (1 PM – 5 PM) · EPC Grid Active', labelMy: 'မီးပြန်လာပါပြီ (၁-၅ ညနေ) · အစိုးရမီးရရှိချိန်' },
+  { start: 17, end: 18, type: 'standby', labelEn: 'Evening Standby (5 PM – 6 PM)', labelMy: 'ညနေ နားချိန် (၅-၆ ညနေ)' },
+  { start: 18, end: 21, type: 'gen', labelEn: 'Evening Peak Generator (6 PM – 9 PM)', labelMy: 'ညနေ မီးစက် (၆-၉ ည)' },
+  { start: 21, end: 24, type: 'grid', labelEn: 'Power Restored (9 PM – 12 AM) · No Night Outage', labelMy: 'ည ၉ နာရီ မီးပြန်လာသည် · ညမီးမပျက်ပါ (အစိုးရမီး)' },
 ];
 
 const SEGMENTS_SHIFT_B_NO_EVENING: Segment[] = [
-  { start: 0, end: 6, type: 'night', labelEn: 'Night Rest (11PM-6AM)', labelMy: 'ညဘက်အိပ်ချိန် (၁၁-၆ မနက်)' },
-  { start: 6, end: 9, type: 'grid', labelEn: 'Morning Grid Power (6AM-9AM)', labelMy: 'မနက် အစိုးရမီး (၆-၉ မနက်)' },
-  { start: 9, end: 11, type: 'standby', labelEn: 'Outage Standby (9AM-11AM)', labelMy: 'မီးပျက် / နားချိန် (၉-၁၁ မနက်)' },
-  { start: 11, end: 13, type: 'gen', labelEn: 'Lunch Generator (11AM-1PM)', labelMy: 'နေ့လယ် မီးစက် (၁၁-၁ နေ့လယ်)' },
-  { start: 13, end: 23, type: 'grid', labelEn: 'Power Restored (1PM-11PM) · EPC Grid Active', labelMy: 'မီးပြန်လာပါပြီ (၁-၁၁ ည) · အစိုးရမီးရရှိချိန်' },
-  { start: 23, end: 24, type: 'night', labelEn: 'Night Rest (11PM-12AM)', labelMy: 'ညဘက်အိပ်ချိန် (၁၁-၁၂ ည)' },
+  { start: 0, end: 9, type: 'grid', labelEn: 'Mains Grid (12 AM – 9 AM) · No Night Outage', labelMy: 'အစိုးရမီး (ည ၁၂ မှ မနက် ၉ နာရီ) · ညမီးမပျက်ပါ' },
+  { start: 9, end: 11, type: 'standby', labelEn: 'Outage Standby (9 AM – 11 AM)', labelMy: 'မီးပျက် / နားချိန် (၉-၁၁ မနက်)' },
+  { start: 11, end: 13, type: 'gen', labelEn: 'Lunch Generator (11 AM – 1 PM)', labelMy: 'နေ့လယ် မီးစက် (၁၁-၁ နေ့လယ်)' },
+  { start: 13, end: 24, type: 'grid', labelEn: 'Power Restored (1 PM – 12 AM) · No Night Outage', labelMy: 'မီးပြန်လာပါပြီ (၁-၁၂ ည) · ညမီးမပျက်ပါ' },
 ];
 
 const SEGMENTS_SHIFT_A: Segment[] = [
-  { start: 0, end: 5, type: 'night', labelEn: 'Night Rest (11PM-5AM)', labelMy: 'ညဘက်အိပ်ချိန် (၁၁-၅ မနက်)' },
-  { start: 5, end: 7, type: 'standby', labelEn: 'Morning Standby (5AM-7AM)', labelMy: 'မနက်စောစော နားချိန် (၅-၇ မနက်)' },
-  { start: 7, end: 9, type: 'gen', labelEn: 'Morning Generator (7AM-9AM)', labelMy: 'မနက်ပိုင်း မီးစက် (၇-၉ မနက်)' },
-  { start: 9, end: 13, type: 'grid', labelEn: 'Power Restored (9AM-1PM) · EPC Grid Active', labelMy: 'မနက် ၉ နာရီ မီးပြန်လာသည် (၉-၁ နေ့လယ်)' },
-  { start: 13, end: 14, type: 'standby', labelEn: 'Afternoon Standby (1PM-2PM)', labelMy: '၁ နာရီ ပြန်ပျက် / နားချိန် (၁-၂ နေ့လယ်)' },
-  { start: 14, end: 15, type: 'gen', labelEn: 'Afternoon Generator 1 (2PM-3PM)', labelMy: 'နေ့လယ် မီးစက် (၂-၃ နေ့လယ်)' },
-  { start: 15, end: 16, type: 'standby', labelEn: 'Afternoon Standby (3PM-4PM)', labelMy: 'နေ့လယ် နားချိန် (၃-၄ ညနေ)' },
-  { start: 16, end: 17, type: 'gen', labelEn: 'Afternoon Generator 2 (4PM-5PM)', labelMy: 'ညနေစောင်း မီးစက် (၄-၅ ညနေ)' },
-  { start: 17, end: 23, type: 'grid', labelEn: 'Power Restored (5PM-11PM) · ညမပျက်', labelMy: 'ညနေ ၅ နာရီ မီးပြန်လာသည် · ညမပျက် (၅-၁၁ ည)' },
-  { start: 23, end: 24, type: 'night', labelEn: 'Night Rest (11PM-12AM)', labelMy: 'ညဘက်အိပ်ချိန် (၁၁-၁၂ ည)' },
+  { start: 0, end: 5, type: 'grid', labelEn: 'Mains Grid (12 AM – 5 AM) · No Night Outage', labelMy: 'အစိုးရမီး (ည ၁၂ မှ မနက် ၅ နာရီ) · ညမီးမပျက်ပါ' },
+  { start: 5, end: 7, type: 'standby', labelEn: 'Morning Standby (5 AM – 7 AM)', labelMy: 'မနက်စောစော နားချိန် (၅-၇ မနက်)' },
+  { start: 7, end: 9, type: 'gen', labelEn: 'Morning Generator (7 AM – 9 AM)', labelMy: 'မနက်ပိုင်း မီးစက် (၇-၉ မနက်)' },
+  { start: 9, end: 13, type: 'grid', labelEn: 'Power Restored (9 AM – 1 PM) · EPC Grid Active', labelMy: 'မနက် ၉ နာရီ မီးပြန်လာသည် (၉-၁ နေ့လယ်)' },
+  { start: 13, end: 14, type: 'standby', labelEn: 'Afternoon Standby (1 PM – 2 PM)', labelMy: '၁ နာရီ ပြန်ပျက် / နားချိန် (၁-၂ နေ့လယ်)' },
+  { start: 14, end: 15, type: 'gen', labelEn: 'Afternoon Generator 1 (2 PM – 3 PM)', labelMy: 'နေ့လယ် မီးစက် (၂-၃ နေ့လယ်)' },
+  { start: 15, end: 16, type: 'standby', labelEn: 'Afternoon Standby (3 PM – 4 PM)', labelMy: 'နေ့လယ် နားချိန် (၃-၄ ညနေ)' },
+  { start: 16, end: 17, type: 'gen', labelEn: 'Afternoon Generator 2 (4 PM – 5 PM)', labelMy: 'ညနေစောင်း မီးစက် (၄-၅ ညနေ)' },
+  { start: 17, end: 24, type: 'grid', labelEn: 'Power Restored (5 PM – 12 AM) · ညမပျက်', labelMy: 'ညနေ ၅ နာရီ မီးပြန်လာသည် · ညမပျက် (အစိုးရမီး)' },
 ];
 
 export const DailyVisualBar: React.FC<DailyVisualBarProps> = ({
@@ -114,15 +109,11 @@ export const DailyVisualBar: React.FC<DailyVisualBarProps> = ({
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-sm bg-[#7AA2C2]" />
-            <span>{language === 'en' ? 'Grid (Power Back)' : 'အစိုးရမီး'}</span>
+            <span>{language === 'en' ? 'Grid (Power Back)' : 'အစိုးရမီး (မီးလာချိန်)'}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-sm bg-[#E2847A]" />
             <span>{t.legendStandby}</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-sm bg-[#8AA399]/40" />
-            <span>{t.legendNight}</span>
           </div>
         </div>
       </div>
