@@ -31,8 +31,8 @@ export const TRANSITIONS_SHIFT_B: DailyScheduleTransition[] = [
     totalMinutes: 540,
     state: 'OUTAGE_STANDBY',
     slotId: null,
-    labelEn: 'Outage Begins · Standby until 11:00 AM',
-    labelMy: 'မီးပျက်ချိန် စတင် · မနက် ၁၁:၀၀ အထိ မီးစက်နားချိန်',
+    labelEn: 'Outage Begins (Standby until 11:00 AM)',
+    labelMy: 'မီးပျက်ချိန် စတင် (၁၁:၀၀ အထိ မီးစက်နားချိန်)',
     badgeEn: 'Power Outage / Standby',
     badgeMy: 'မီးပျက် / စောင့်ဆိုင်း',
   },
@@ -64,8 +64,8 @@ export const TRANSITIONS_SHIFT_B: DailyScheduleTransition[] = [
     totalMinutes: 1020,
     state: 'OUTAGE_STANDBY',
     slotId: null,
-    labelEn: 'Evening Outage Begins · Standby until 06:00 PM',
-    labelMy: 'ညနေပိုင်း မီးပျက်ချိန် စတင် · ညနေ ၆:၀၀ အထိ မီးစက်နားချိန်',
+    labelEn: 'Evening Outage (Standby until 06:00 PM)',
+    labelMy: 'ညနေပိုင်း မီးပျက်ချိန် (၆:၀၀ အထိ မီးစက်နားချိန်)',
     badgeEn: 'Power Outage / Standby',
     badgeMy: 'မီးပျက် / စောင့်ဆိုင်း',
   },
@@ -112,8 +112,8 @@ export const TRANSITIONS_SHIFT_A: DailyScheduleTransition[] = [
     totalMinutes: 300,
     state: 'OUTAGE_STANDBY',
     slotId: null,
-    labelEn: 'Early Morning Outage Begins · Standby until 07:00 AM',
-    labelMy: 'မနက်စောစော မီးပျက်ချိန် · ၇:၀၀ အထိ စောင့်ဆိုင်း',
+    labelEn: 'Early Morning Outage (Standby until 7:00 AM)',
+    labelMy: 'မနက်စောစော မီးပျက်ချိန် (၇:၀၀ အထိ စောင့်ဆိုင်း)',
     badgeEn: 'Power Outage / Standby',
     badgeMy: 'မီးပျက် / စောင့်ဆိုင်း',
   },
@@ -215,8 +215,8 @@ export const TRANSITIONS_SHIFT_B_NO_EVENING: DailyScheduleTransition[] = [
     totalMinutes: 540,
     state: 'OUTAGE_STANDBY',
     slotId: null,
-    labelEn: 'Outage Begins · Standby until 11:00 AM',
-    labelMy: 'မီးပျက်ချိန် စတင် · မနက် ၁၁:၀၀ အထိ မီးစက်နားချိန်',
+    labelEn: 'Outage Begins (Standby until 11:00 AM)',
+    labelMy: 'မီးပျက်ချိန် စတင် (၁၁:၀၀ အထိ မီးစက်နားချိန်)',
     badgeEn: 'Power Outage / Standby',
     badgeMy: 'မီးပျက် / စောင့်ဆိုင်း',
   },
@@ -430,6 +430,8 @@ export interface MyanmarTimeInfo {
   weekday: string;
   dateStrEn: string;
   dateStrMy: string;
+  dateShortEn: string;
+  dateShortMy: string;
   autoShift: ShiftType;
 }
 
@@ -490,6 +492,8 @@ export function getLiveMyanmarTime(): MyanmarTimeInfo {
 
   const dateStrEn = `${weekday}, ${monthsEn[month - 1]} ${day}, ${year}`;
   const dateStrMy = `${toMyDigits(year)} ခုနှစ်၊ ${monthsMy[month - 1]}လ ${toMyDigits(day)} ရက် (${daysMy[weekday] || weekday}နေ့)`;
+  const dateShortEn = `${monthsEn[month - 1]} ${day} (${weekday.slice(0, 3)})`;
+  const dateShortMy = `${monthsMy[month - 1]} ${toMyDigits(day)} (${daysMy[weekday] || weekday})`;
   const autoShift = getAutoShiftForDate(year, month, day);
 
   return {
@@ -502,6 +506,8 @@ export function getLiveMyanmarTime(): MyanmarTimeInfo {
     weekday,
     dateStrEn,
     dateStrMy,
+    dateShortEn,
+    dateShortMy,
     autoShift,
   };
 }

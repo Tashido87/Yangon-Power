@@ -8,6 +8,7 @@ import { translations } from '../i18n/translations';
 
 interface HeroStatusCardProps {
   currentDateStr: string;
+  currentShortDateStr?: string;
   currentTimeStr: string;
   statusInfo: CurrentStatusCalculation;
   language: Language;
@@ -24,6 +25,7 @@ interface HeroStatusCardProps {
 
 export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
   currentDateStr,
+  currentShortDateStr,
   currentTimeStr,
   statusInfo,
   language,
@@ -92,14 +94,17 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
     <section id="hero-status" className="w-full">
       <div className={`relative bg-white rounded-3xl p-5 sm:p-7 border ${cardBorderClass} shadow-md transition-all duration-300`}>
         
-        {/* Top Header Row: Date & Live Myanmar Clock */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#FAF7F2]">
-          <div className="flex items-center gap-2 text-xs sm:text-sm text-[#6C727F]">
-            <Calendar className="w-4 h-4 text-[#8AA399]" />
-            <span className="font-medium text-[#2D3142]">{currentDateStr}</span>
+        {/* Top Header Row: Date & Live Myanmar Clock & Setting Icon in a single line */}
+        <div className="flex items-center justify-between gap-1.5 sm:gap-3 pb-3 border-b border-[#FAF7F2]">
+          {/* Left: Date */}
+          <div className="flex items-center gap-1.5 text-xs text-[#6C727F] min-w-0">
+            <Calendar className="w-3.5 h-3.5 text-[#8AA399] shrink-0" />
+            <span className="font-medium text-[#2D3142] truncate hidden sm:inline">{currentDateStr}</span>
+            <span className="font-medium text-[#2D3142] truncate sm:hidden">{currentShortDateStr || currentDateStr}</span>
           </div>
 
-          <div className="flex items-center gap-2">
+          {/* Right: Clock & Action Buttons (Setting Icon, Slider Icon) */}
+          <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
             {/* Clock container */}
             <button
               type="button"
@@ -111,18 +116,18 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
                 }
               }}
               title={isSimulated ? (language === 'en' ? 'Click to return to live time' : 'လက်ရှိအချိန်သို့ ပြန်သွားရန် နှိပ်ပါ') : 'Live Myanmar Time'}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-2xl border text-xs sm:text-sm font-semibold text-[#2D3142] tabular-nums shadow-inner transition-all ${
+              className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 rounded-xl sm:rounded-2xl border text-xs sm:text-sm font-semibold text-[#2D3142] tabular-nums shadow-inner transition-all ${
                 isSimulated ? 'bg-[#FFF5F2] border-[#FADCD5] hover:border-[#E2847A] cursor-pointer' : 'bg-[#FAF7F2] border-[#EFECE6]'
               }`}
             >
-              <Clock className={`w-3.5 h-3.5 ${isSimulated ? 'text-[#E2847A]' : 'text-[#7A9E7E]'}`} />
+              <Clock className={`w-3.5 h-3.5 shrink-0 ${isSimulated ? 'text-[#E2847A]' : 'text-[#7A9E7E]'}`} />
               <span>{currentTimeStr}</span>
               {isSimulated ? (
-                <span className="text-[10px] font-bold text-[#E2847A] bg-[#FDF0EE] px-1.5 py-0.2 rounded-md uppercase tracking-wider ml-1">
+                <span className="text-[9px] sm:text-[10px] font-bold text-[#E2847A] bg-[#FDF0EE] px-1 sm:px-1.5 py-0.2 rounded-md uppercase tracking-wider ml-0.5 sm:ml-1">
                   {t.simBadge}
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#7A9E7E] bg-[#EBF3EC] px-1.5 py-0.2 rounded-md uppercase tracking-wider ml-1">
+                <span className="hidden xs:inline-flex sm:inline-flex items-center gap-1 text-[9px] sm:text-[10px] font-bold text-[#7A9E7E] bg-[#EBF3EC] px-1 sm:px-1.5 py-0.2 rounded-md uppercase tracking-wider ml-0.5 sm:ml-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#7A9E7E] animate-ping" />
                   MMT
                 </span>
@@ -138,11 +143,11 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
                   setShowTimeSlider(false);
                   soundManager.playCutePop();
                 }}
-                className="cute-press h-8 px-2.5 rounded-xl bg-[#7A9E7E] hover:bg-[#688B6C] text-white text-xs font-bold flex items-center gap-1.5 shadow-2xs transition-all animate-in fade-in"
+                className="cute-press h-7 sm:h-8 px-2 sm:px-2.5 rounded-xl bg-[#7A9E7E] hover:bg-[#688B6C] text-white text-xs font-bold flex items-center gap-1 shadow-2xs transition-all animate-in fade-in"
                 title="Reset to current live Myanmar Standard Time"
               >
-                <RotateCcw className="w-3.5 h-3.5" />
-                <span className="text-[11px]">{language === 'en' ? 'Reset Live' : 'လက်ရှိအချိန်'}</span>
+                <RotateCcw className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                <span className="hidden sm:inline text-[11px]">{language === 'en' ? 'Reset Live' : 'လက်ရှိအချိန်'}</span>
               </button>
             )}
 
@@ -152,15 +157,30 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
                 setShowTimeSlider(!showTimeSlider);
                 soundManager.playCutePop();
               }}
-              className={`cute-press h-8 px-2.5 rounded-xl border text-xs font-medium flex items-center gap-1 transition-all ${
+              className={`cute-press h-7 w-7 sm:h-8 sm:w-auto sm:px-2.5 rounded-xl border text-xs font-medium flex items-center justify-center gap-1 transition-all ${
                 showTimeSlider
                   ? 'bg-[#7A9E7E] text-white border-[#7A9E7E]'
                   : 'bg-white border-[#EFECE6] text-[#6C727F] hover:text-[#2D3142]'
               }`}
               title="Test status at different hours"
             >
-              <Sliders className="w-3 h-3" />
+              <Sliders className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">{t.timeTravelToggle}</span>
+            </button>
+
+            {/* Settings button */}
+            <button
+              type="button"
+              onClick={() => {
+                onOpenSettings();
+                soundManager.playCutePop();
+              }}
+              className="cute-press h-7 w-7 sm:h-8 sm:w-auto sm:px-2.5 rounded-xl border border-[#EFECE6] bg-white hover:bg-[#FAF7F2] text-[#6C727F] hover:text-[#2D3142] hover:border-[#7A9E7E]/40 flex items-center justify-center gap-1 transition-all"
+              title="Open Settings"
+              aria-label="Settings"
+            >
+              <Settings className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline text-[11px] font-semibold">{language === 'en' ? 'Settings' : 'ချိန်ညှိရန်'}</span>
             </button>
           </div>
         </div>
@@ -194,26 +214,17 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
         {/* Subtle Active Shift Status Indicator */}
         <div className="pt-2 pb-1">
           <div className="flex items-center justify-between text-xs text-[#727885] px-3.5 py-2 bg-[#FAF7F2] rounded-2xl border border-[#EAE6DF]">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="w-2 h-2 rounded-full bg-[#7A9E7E] animate-soft-pulse" />
-              <span className="font-semibold text-[#2D3142]">
+            <div className="flex items-center gap-2 flex-wrap min-w-0">
+              <span className="w-2 h-2 rounded-full bg-[#7A9E7E] animate-soft-pulse shrink-0" />
+              <span className="font-semibold text-[#2D3142] truncate">
                 {shift === 'shift_b'
                   ? (language === 'en' ? 'Shift B (9 AM – 1 PM Outage)' : 'အလှည့် B (မနက် ၉-၁ မီးပျက်)')
                   : (language === 'en' ? 'Shift A (5 AM – 9 AM Outage · 9 AM Back)' : 'အလှည့် A (မနက် ၅-၉ မီးပျက် · ၉ နာရီ မီးလာ)')}
               </span>
-              <span className="text-[10px] text-[#7A9E7E] font-medium bg-[#EBF3EC] px-2 py-0.5 rounded-full border border-[#7A9E7E]/30">
+              <span className="text-[10px] text-[#7A9E7E] font-medium bg-[#EBF3EC] px-2 py-0.5 rounded-full border border-[#7A9E7E]/30 shrink-0">
                 {language === 'en' ? 'Daily Alternation' : 'တရက်စီ အလှည့်ကျ'}
               </span>
             </div>
-            <button
-              type="button"
-              onClick={onOpenSettings}
-              className="cute-press flex items-center gap-1.5 text-[11px] font-semibold text-[#7A9E7E] hover:text-[#587a5b] bg-white px-2.5 py-1 rounded-xl border border-[#EFECE6] shadow-2xs shrink-0"
-              title="Open Settings to adjust schedule"
-            >
-              <Settings className="w-3.5 h-3.5" />
-              <span>{language === 'en' ? 'Settings' : 'ချိန်ညှိရန်'}</span>
-            </button>
           </div>
         </div>
 
@@ -345,7 +356,7 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
         </div>
 
         {/* Bottom Banner Card: Countdown Timer to Next Scheduled Event */}
-        <div className="mt-4 sm:mt-6 pt-4 sm:pt-5 border-t border-[#FAF7F2] grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 items-center">
+        <div className="mt-4 sm:mt-6 pt-4 sm:pt-5 border-t border-[#FAF7F2] grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 items-stretch">
           {/* Countdown block */}
           <div className="p-3.5 sm:p-4 rounded-2xl bg-[#FAF7F2] border border-[#EFECE6] flex items-center gap-3.5 shadow-xs">
             <div className="w-10 h-10 rounded-xl bg-white border border-[#EAE6DF] flex items-center justify-center shrink-0 text-[#7A9E7E] shadow-xs">
@@ -366,8 +377,8 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
             <div className="w-10 h-10 rounded-xl bg-white border border-[#EAE6DF] flex items-center justify-center shrink-0 text-[#E2847A] shadow-xs">
               <ArrowRight className="w-5 h-5" />
             </div>
-            <div className="min-w-0">
-              <div className="text-[11px] font-medium uppercase tracking-wider text-[#8AA399] flex items-center gap-1.5">
+            <div className="min-w-0 flex-1">
+              <div className="text-[11px] font-medium uppercase tracking-wider text-[#8AA399] flex items-center gap-1.5 flex-wrap">
                 <span>{t.targetEvent}</span>
                 <span className="font-bold text-[#2D3142] tabular-nums">
                   {language === 'en'
@@ -375,7 +386,7 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
                     : (statusInfo.nextEvent.timeStringMy || statusInfo.nextEvent.timeString)}
                 </span>
               </div>
-              <div className="text-xs sm:text-sm font-semibold text-[#2D3142] truncate">
+              <div className="text-xs sm:text-sm font-semibold text-[#2D3142] leading-snug break-words">
                 {language === 'en'
                   ? statusInfo.nextEvent.eventDescriptionEn
                   : statusInfo.nextEvent.eventDescriptionMy}

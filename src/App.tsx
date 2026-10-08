@@ -33,6 +33,8 @@ export default function App() {
   const [currentSecond, setCurrentSecond] = useState(initialMyanmarTime.second);
   const [liveDateEn, setLiveDateEn] = useState(initialMyanmarTime.dateStrEn);
   const [liveDateMy, setLiveDateMy] = useState(initialMyanmarTime.dateStrMy);
+  const [liveShortDateEn, setLiveShortDateEn] = useState(initialMyanmarTime.dateShortEn);
+  const [liveShortDateMy, setLiveShortDateMy] = useState(initialMyanmarTime.dateShortMy);
 
   const prevStatusRef = useRef<PowerState | null>(null);
 
@@ -51,6 +53,8 @@ export default function App() {
         setCurrentSecond(mmt.second);
         setLiveDateEn(mmt.dateStrEn);
         setLiveDateMy(mmt.dateStrMy);
+        setLiveShortDateEn(mmt.dateShortEn);
+        setLiveShortDateMy(mmt.dateShortMy);
 
         // In auto rotation mode, automatically switch shift when a new day arrives in Myanmar!
         if (rotationMode === 'auto') {
@@ -135,6 +139,8 @@ export default function App() {
     setCurrentSecond(mmt.second);
     setLiveDateEn(mmt.dateStrEn);
     setLiveDateMy(mmt.dateStrMy);
+    setLiveShortDateEn(mmt.dateShortEn);
+    setLiveShortDateMy(mmt.dateShortMy);
     if (rotationMode === 'auto') {
       setShift(mmt.autoShift);
     }
@@ -149,6 +155,7 @@ export default function App() {
   };
 
   const dateDisplay = language === 'en' ? liveDateEn : liveDateMy;
+  const shortDateDisplay = language === 'en' ? liveShortDateEn : liveShortDateMy;
   const timeDisplay = formatClockTime(currentHour, currentMinute, currentSecond);
 
   return (
@@ -169,6 +176,7 @@ export default function App() {
         {/* Hero Live Status Card */}
         <HeroStatusCard
           currentDateStr={dateDisplay}
+          currentShortDateStr={shortDateDisplay}
           currentTimeStr={timeDisplay}
           statusInfo={statusInfo}
           language={language}
