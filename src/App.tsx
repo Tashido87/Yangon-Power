@@ -175,7 +175,6 @@ export default function App() {
         onLanguageChange={handleLanguageChange}
         isSoundEnabled={isSoundEnabled}
         onToggleSound={handleToggleSound}
-        onOpenSettings={() => setIsSettingsOpen(true)}
       />
 
       {/* Main Single Dashboard Container */}

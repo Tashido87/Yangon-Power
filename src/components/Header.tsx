@@ -1,5 +1,5 @@
 import React from 'react';
-import { Volume2, VolumeX, Languages, Settings } from 'lucide-react';
+import { Volume2, VolumeX, Languages } from 'lucide-react';
 import { Language } from '../types';
 import { soundManager } from '../utils/audio';
 import { PWAInstallButton } from './PWAInstallButton';
@@ -9,7 +9,6 @@ interface HeaderProps {
   onLanguageChange: (lang: Language) => void;
   isSoundEnabled: boolean;
   onToggleSound: () => void;
-  onOpenSettings: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -17,7 +16,6 @@ export const Header: React.FC<HeaderProps> = ({
   onLanguageChange,
   isSoundEnabled,
   onToggleSound,
-  onOpenSettings,
 }) => {
   return (
     <header className="sticky top-0 z-30 w-full bg-[#FAF7F2]/90 backdrop-blur-md border-b border-[#EFECE6] px-4 sm:px-6 py-3 transition-colors">
@@ -34,7 +32,7 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
 
-        {/* Quick Tools: Install, Sound, Language & Setting */}
+        {/* Quick Tools: Install, Sound & Language */}
         <div className="flex items-center gap-2">
           {/* Add to Home Screen / Install Button */}
           <PWAInstallButton language={language} compact />
@@ -75,20 +73,6 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <Languages className="w-3.5 h-3.5 text-[#8AA399]" />
             <span className="tabular-nums">{language === 'en' ? 'မြန်မာ' : 'EN'}</span>
-          </button>
-
-          {/* Settings Modal Button */}
-          <button
-            onClick={() => {
-              onOpenSettings();
-              soundManager.playCutePop();
-            }}
-            title="Open Settings"
-            aria-label="Open Settings"
-            className="cute-press h-9 px-2.5 sm:px-3 rounded-xl bg-white border border-[#EFECE6] text-xs font-semibold text-[#2D3142] shadow-2xs hover:border-[#7A9E7E]/50 flex items-center gap-1.5 transition-all"
-          >
-            <Settings className="w-3.5 h-3.5 text-[#7A9E7E]" />
-            <span className="text-[11px] font-medium hidden xs:inline">{language === 'en' ? 'Settings' : 'ချိန်ညှိရန်'}</span>
           </button>
         </div>
       </div>
