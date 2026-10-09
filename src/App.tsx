@@ -23,6 +23,8 @@ export default function App() {
   const [shift, setShift] = useState<ShiftType>(initialSettings.shift);
   // Active: 5 PM - 9 PM evening outage is active
   const [hasEveningOutage, setHasEveningOutage] = useState<boolean>(initialSettings.hasEveningOutage);
+  // Generator schedule display: Default is FALSE as requested by user (only show grid power on / outage schedule)
+  const [showGenerator, setShowGenerator] = useState<boolean>(initialSettings.showGenerator);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   // Time management: Initialize immediately with actual current Myanmar Local Time (Asia/Yangon UTC+6:30)
@@ -81,7 +83,7 @@ export default function App() {
     return () => clearInterval(timer);
   }, [isSimulated, rotationMode]);
 
-  // Status calculation based on active time, active shift, and evening outage toggle
+  // Status calculation based on active time, active shift, evening outage toggle, and generator display preference
   const statusInfo = calculateStatus(
     {
       hour: currentHour,
@@ -89,7 +91,8 @@ export default function App() {
       second: currentSecond,
     },
     shift,
-    hasEveningOutage
+    hasEveningOutage,
+    showGenerator
   );
 
   // Sound chime when state transitions
@@ -110,6 +113,11 @@ export default function App() {
   const handleToggleEveningOutage = (val: boolean) => {
     setHasEveningOutage(val);
     saveStoredSettings({ hasEveningOutage: val });
+  };
+
+  const handleToggleShowGenerator = (val: boolean) => {
+    setShowGenerator(val);
+    saveStoredSettings({ showGenerator: val });
   };
 
   const handleLanguageChange = (newLang: Language) => {
@@ -183,6 +191,7 @@ export default function App() {
           shift={shift}
           rotationMode={rotationMode}
           hasEveningOutage={hasEveningOutage}
+          showGenerator={showGenerator}
           onOpenSettings={() => setIsSettingsOpen(true)}
           isSimulated={isSimulated}
           simulatedHour={currentHour}
@@ -198,6 +207,7 @@ export default function App() {
           language={language}
           shift={shift}
           hasEveningOutage={hasEveningOutage}
+          showGenerator={showGenerator}
           onSelectHour={(hour) => handleSimulateTime(hour, 0)}
           isSimulated={isSimulated}
           onResetToLive={handleResetToLive}
@@ -227,6 +237,8 @@ export default function App() {
         onShiftChange={handleShiftChange}
         hasEveningOutage={hasEveningOutage}
         onToggleEveningOutage={handleToggleEveningOutage}
+        showGenerator={showGenerator}
+        onToggleShowGenerator={handleToggleShowGenerator}
         language={language}
         onLanguageChange={handleLanguageChange}
         isSoundEnabled={isSoundEnabled}

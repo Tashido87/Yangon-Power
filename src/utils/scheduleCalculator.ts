@@ -244,20 +244,185 @@ export const TRANSITIONS_SHIFT_B_NO_EVENING: DailyScheduleTransition[] = [
   },
 ];
 
+// PURE GRID & OUTAGE TRANSITIONS (When Generator is OFF / Hidden - Default Mode)
+// Shift B: 9:00 AM - 1:00 PM Outage, 1:00 PM - 5:00 PM Power Restored, 5:00 PM - 9:00 PM Outage, 9:00 PM+ Restored (ညမပျက်)
+export const TRANSITIONS_GRID_ONLY_SHIFT_B: DailyScheduleTransition[] = [
+  {
+    hour: 0,
+    minute: 0,
+    totalMinutes: 0,
+    state: 'GRID_NORMAL',
+    slotId: null,
+    labelEn: 'Grid Power Active (Until 09:00 AM) · No Night Outage',
+    labelMy: 'အစိုးရမီး ရရှိချိန် (မနက် ၉:၀၀ အထိ မီးမပျက်ပါ)',
+    badgeEn: 'Grid Power Active',
+    badgeMy: 'အစိုးရမီး ရရှိနေသည်',
+  },
+  {
+    hour: 9,
+    minute: 0,
+    totalMinutes: 540,
+    state: 'OUTAGE_STANDBY',
+    slotId: null,
+    labelEn: 'Power Outage (09:00 AM – 01:00 PM) · Restores at 01:00 PM',
+    labelMy: 'မီးပျက်ချိန် (မနက် ၉:၀၀ မှ နေ့လယ် ၁:၀၀ အထိ) · ၁:၀၀ နာရီ မီးပြန်လာမည်',
+    badgeEn: 'Power Outage',
+    badgeMy: 'မီးပျက်နေပါသည်',
+  },
+  {
+    hour: 13,
+    minute: 0,
+    totalMinutes: 780,
+    state: 'GRID_NORMAL',
+    slotId: null,
+    labelEn: 'Grid Power Restored (01:00 PM – 05:00 PM)',
+    labelMy: 'မီးပြန်လာပါပြီ (နေ့လယ် ၁:၀၀ မှ ညနေ ၅:၀၀ အထိ)',
+    badgeEn: 'Grid Power Restored',
+    badgeMy: 'အစိုးရမီး ရရှိနေသည်',
+  },
+  {
+    hour: 17,
+    minute: 0,
+    totalMinutes: 1020,
+    state: 'OUTAGE_STANDBY',
+    slotId: null,
+    labelEn: 'Evening Power Outage (05:00 PM – 09:00 PM) · Restores at 09:00 PM',
+    labelMy: 'ညနေပိုင်း မီးပျက်ချိန် (ညနေ ၅:၀၀ မှ ည ၉:၀၀ အထိ) · ၉:၀၀ နာရီ မီးပြန်လာမည်',
+    badgeEn: 'Power Outage',
+    badgeMy: 'မီးပျက်နေပါသည်',
+  },
+  {
+    hour: 21,
+    minute: 0,
+    totalMinutes: 1260,
+    state: 'GRID_NORMAL',
+    slotId: null,
+    labelEn: 'Grid Power Restored at 9:00 PM · No Night Outage',
+    labelMy: 'ည ၉:၀၀ နာရီ မီးပြန်လာပါပြီ · ညဘက်မီးမပျက်ပါ',
+    badgeEn: 'Grid Power Restored',
+    badgeMy: 'အစိုးရမီး ရရှိနေသည်',
+  },
+];
+
+export const TRANSITIONS_GRID_ONLY_SHIFT_B_NO_EVENING: DailyScheduleTransition[] = [
+  {
+    hour: 0,
+    minute: 0,
+    totalMinutes: 0,
+    state: 'GRID_NORMAL',
+    slotId: null,
+    labelEn: 'Grid Power Active (Until 09:00 AM) · No Night Outage',
+    labelMy: 'အစိုးရမီး ရရှိချိန် (မနက် ၉:၀၀ အထိ မီးမပျက်ပါ)',
+    badgeEn: 'Grid Power Active',
+    badgeMy: 'အစိုးရမီး ရရှိနေသည်',
+  },
+  {
+    hour: 9,
+    minute: 0,
+    totalMinutes: 540,
+    state: 'OUTAGE_STANDBY',
+    slotId: null,
+    labelEn: 'Power Outage (09:00 AM – 01:00 PM) · Restores at 01:00 PM',
+    labelMy: 'မီးပျက်ချိန် (မနက် ၉:၀၀ မှ နေ့လယ် ၁:၀၀ အထိ) · ၁:၀၀ နာရီ မီးပြန်လာမည်',
+    badgeEn: 'Power Outage',
+    badgeMy: 'မီးပျက်နေပါသည်',
+  },
+  {
+    hour: 13,
+    minute: 0,
+    totalMinutes: 780,
+    state: 'GRID_NORMAL',
+    slotId: null,
+    labelEn: 'Grid Power Restored (01:00 PM – 12:00 AM) · No Night Outage',
+    labelMy: 'မီးပြန်လာပါပြီ (နေ့လယ် ၁:၀၀ မှ ည ၁၂:၀၀ အထိ) · ညမီးမပျက်ပါ',
+    badgeEn: 'Grid Power Restored',
+    badgeMy: 'အစိုးရမီး ရရှိနေသည်',
+  },
+];
+
+// Shift A: 5:00 AM - 9:00 AM Outage, 9:00 AM - 1:00 PM Power Restored, 1:00 PM - 5:00 PM Outage, 5:00 PM+ Restored (ညမပျက်)
+export const TRANSITIONS_GRID_ONLY_SHIFT_A: DailyScheduleTransition[] = [
+  {
+    hour: 0,
+    minute: 0,
+    totalMinutes: 0,
+    state: 'GRID_NORMAL',
+    slotId: null,
+    labelEn: 'Early Morning Grid Power (Until 05:00 AM) · No Night Outage',
+    labelMy: 'မနက်စောစော အစိုးရမီး ရရှိချိန် (မနက် ၅:၀၀ အထိ မီးမပျက်ပါ)',
+    badgeEn: 'Grid Power Active',
+    badgeMy: 'အစိုးရမီး ရရှိနေသည်',
+  },
+  {
+    hour: 5,
+    minute: 0,
+    totalMinutes: 300,
+    state: 'OUTAGE_STANDBY',
+    slotId: null,
+    labelEn: 'Morning Power Outage (05:00 AM – 09:00 AM) · Restores at 09:00 AM',
+    labelMy: 'မနက်စောစော မီးပျက်ချိန် (မနက် ၅:၀၀ မှ ၉:၀၀ အထိ) · ၉:၀၀ နာရီ မီးပြန်လာမည်',
+    badgeEn: 'Power Outage',
+    badgeMy: 'မီးပျက်နေပါသည်',
+  },
+  {
+    hour: 9,
+    minute: 0,
+    totalMinutes: 540,
+    state: 'GRID_NORMAL',
+    slotId: null,
+    labelEn: 'Grid Power Restored (09:00 AM – 01:00 PM)',
+    labelMy: 'မီးပြန်လာပါပြီ (မနက် ၉:၀၀ မှ နေ့လယ် ၁:၀၀ အထိ)',
+    badgeEn: 'Grid Power Restored',
+    badgeMy: 'အစိုးရမီး ရရှိနေသည်',
+  },
+  {
+    hour: 13,
+    minute: 0,
+    totalMinutes: 780,
+    state: 'OUTAGE_STANDBY',
+    slotId: null,
+    labelEn: 'Afternoon Power Outage (01:00 PM – 05:00 PM) · Restores at 05:00 PM',
+    labelMy: 'နေ့လယ်ပိုင်း မီးပျက်ချိန် (နေ့လယ် ၁:၀၀ မှ ညနေ ၅:၀၀ အထိ) · ၅:၀၀ နာရီ မီးပြန်လာမည်',
+    badgeEn: 'Power Outage',
+    badgeMy: 'မီးပျက်နေပါသည်',
+  },
+  {
+    hour: 17,
+    minute: 0,
+    totalMinutes: 1020,
+    state: 'GRID_NORMAL',
+    slotId: null,
+    labelEn: 'Grid Power Restored at 5:00 PM · No Night Outage',
+    labelMy: 'ညနေ ၅:၀၀ မီးပြန်လာပါပြီ · ညမီးမပျက်ပါ (အစိုးရမီး ရရှိနေသည်)',
+    badgeEn: 'Grid Power Restored',
+    badgeMy: 'အစိုးရမီး ရရှိနေသည်',
+  },
+];
+
 export function calculateStatus(
   dateOrTime: { hour: number; minute: number; second: number },
   shift: ShiftType = 'shift_b',
-  hasEveningOutage: boolean = true
+  hasEveningOutage: boolean = true,
+  showGenerator: boolean = false
 ): CurrentStatusCalculation {
   const { hour, minute, second } = dateOrTime;
   const currentTotalMinutes = hour * 60 + minute;
   const currentTotalSeconds = currentTotalMinutes * 60 + second;
 
   let transitions: DailyScheduleTransition[];
-  if (shift === 'shift_a') {
-    transitions = TRANSITIONS_SHIFT_A;
+  if (showGenerator) {
+    if (shift === 'shift_a') {
+      transitions = TRANSITIONS_SHIFT_A;
+    } else {
+      transitions = hasEveningOutage ? TRANSITIONS_SHIFT_B : TRANSITIONS_SHIFT_B_NO_EVENING;
+    }
   } else {
-    transitions = hasEveningOutage ? TRANSITIONS_SHIFT_B : TRANSITIONS_SHIFT_B_NO_EVENING;
+    // Pure Grid On / Outage schedule (Generator hidden - user default)
+    if (shift === 'shift_a') {
+      transitions = TRANSITIONS_GRID_ONLY_SHIFT_A;
+    } else {
+      transitions = hasEveningOutage ? TRANSITIONS_GRID_ONLY_SHIFT_B : TRANSITIONS_GRID_ONLY_SHIFT_B_NO_EVENING;
+    }
   }
 
   // Determine current active transition

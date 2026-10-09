@@ -9,6 +9,7 @@ interface DailyVisualBarProps {
   language: Language;
   shift: ShiftType;
   hasEveningOutage?: boolean;
+  showGenerator?: boolean;
   onSelectHour?: (hour: number) => void;
   isSimulated?: boolean;
   onResetToLive?: () => void;
@@ -22,6 +23,30 @@ interface Segment {
   labelMy: string;
 }
 
+// Pure Grid Power On & Outage segments (No generator - default view)
+const SEGMENTS_GRID_ONLY_SHIFT_B: Segment[] = [
+  { start: 0, end: 9, type: 'grid', labelEn: 'Mains Grid (12 AM – 9 AM) · No Night Outage', labelMy: 'အစိုးရမီး (ည ၁၂ မှ မနက် ၉ နာရီ) · ညမီးမပျက်ပါ' },
+  { start: 9, end: 13, type: 'standby', labelEn: 'Power Outage (9 AM – 1 PM)', labelMy: 'မီးပျက်ချိန် (မနက် ၉ မှ နေ့လယ် ၁ နာရီ)' },
+  { start: 13, end: 17, type: 'grid', labelEn: 'Grid Power Restored (1 PM – 5 PM)', labelMy: 'အစိုးရမီး ရရှိချိန် (နေ့လယ် ၁ မှ ညနေ ၅ နာရီ)' },
+  { start: 17, end: 21, type: 'standby', labelEn: 'Evening Power Outage (5 PM – 9 PM)', labelMy: 'ညနေပိုင်း မီးပျက်ချိန် (ညနေ ၅ မှ ည ၉ နာရီ)' },
+  { start: 21, end: 24, type: 'grid', labelEn: 'Grid Power Restored (9 PM – 12 AM) · No Night Outage', labelMy: 'ည ၉ နာရီ မီးပြန်လာသည် · ညမီးမပျက်ပါ (အစိုးရမီး)' },
+];
+
+const SEGMENTS_GRID_ONLY_SHIFT_B_NO_EVENING: Segment[] = [
+  { start: 0, end: 9, type: 'grid', labelEn: 'Mains Grid (12 AM – 9 AM) · No Night Outage', labelMy: 'အစိုးရမီး (ည ၁၂ မှ မနက် ၉ နာရီ) · ညမီးမပျက်ပါ' },
+  { start: 9, end: 13, type: 'standby', labelEn: 'Power Outage (9 AM – 1 PM)', labelMy: 'မီးပျက်ချိန် (မနက် ၉ မှ နေ့လယ် ၁ နာရီ)' },
+  { start: 13, end: 24, type: 'grid', labelEn: 'Grid Power Restored (1 PM – 12 AM) · No Night Outage', labelMy: 'မီးပြန်လာပါပြီ (နေ့လယ် ၁ မှ ည ၁၂ နာရီ) · ညမီးမပျက်ပါ' },
+];
+
+const SEGMENTS_GRID_ONLY_SHIFT_A: Segment[] = [
+  { start: 0, end: 5, type: 'grid', labelEn: 'Mains Grid (12 AM – 5 AM) · No Night Outage', labelMy: 'အစိုးရမီး (ည ၁၂ မှ မနက် ၅ နာရီ) · ညမီးမပျက်ပါ' },
+  { start: 5, end: 9, type: 'standby', labelEn: 'Morning Power Outage (5 AM – 9 AM)', labelMy: 'မနက်စောစော မီးပျက်ချိန် (မနက် ၅ မှ ၉ နာရီ)' },
+  { start: 9, end: 13, type: 'grid', labelEn: 'Grid Power Restored (9 AM – 1 PM)', labelMy: 'မနက် ၉ နာရီ မီးပြန်လာသည် (မနက် ၉ မှ နေ့လယ် ၁ နာရီ)' },
+  { start: 13, end: 17, type: 'standby', labelEn: 'Afternoon Power Outage (1 PM – 5 PM)', labelMy: 'နေ့လယ်ပိုင်း မီးပျက်ချိန် (နေ့လယ် ၁ မှ ညနေ ၅ နာရီ)' },
+  { start: 17, end: 24, type: 'grid', labelEn: 'Grid Power Restored (5 PM – 12 AM) · No Night Outage', labelMy: 'ညနေ ၅ နာရီ မီးပြန်လာသည် · ညမီးမပျက်ပါ (အစိုးရမီး)' },
+];
+
+// Generator Detailed segments (when Generator is enabled by user)
 const SEGMENTS_SHIFT_B: Segment[] = [
   { start: 0, end: 9, type: 'grid', labelEn: 'Mains Grid (12 AM – 9 AM) · No Night Outage', labelMy: 'အစိုးရမီး (ည ၁၂ မှ မနက် ၉ နာရီ) · ညမီးမပျက်ပါ' },
   { start: 9, end: 11, type: 'standby', labelEn: 'Outage Standby (9 AM – 11 AM)', labelMy: 'မီးပျက် / နားချိန် (၉-၁၁ မနက်)' },
@@ -57,6 +82,7 @@ export const DailyVisualBar: React.FC<DailyVisualBarProps> = ({
   language,
   shift,
   hasEveningOutage = true,
+  showGenerator = false,
   onSelectHour,
   isSimulated = false,
   onResetToLive,
@@ -66,11 +92,19 @@ export const DailyVisualBar: React.FC<DailyVisualBarProps> = ({
   const currentFraction = (currentHour * 60 + currentMinute) / 1440;
   const currentPercent = Math.min(100, Math.max(0, currentFraction * 100));
 
-  let daySegments = SEGMENTS_SHIFT_B;
-  if (shift === 'shift_a') {
-    daySegments = SEGMENTS_SHIFT_A;
+  let daySegments: Segment[];
+  if (showGenerator) {
+    if (shift === 'shift_a') {
+      daySegments = SEGMENTS_SHIFT_A;
+    } else {
+      daySegments = hasEveningOutage ? SEGMENTS_SHIFT_B : SEGMENTS_SHIFT_B_NO_EVENING;
+    }
   } else {
-    daySegments = hasEveningOutage ? SEGMENTS_SHIFT_B : SEGMENTS_SHIFT_B_NO_EVENING;
+    if (shift === 'shift_a') {
+      daySegments = SEGMENTS_GRID_ONLY_SHIFT_A;
+    } else {
+      daySegments = hasEveningOutage ? SEGMENTS_GRID_ONLY_SHIFT_B : SEGMENTS_GRID_ONLY_SHIFT_B_NO_EVENING;
+    }
   }
 
   return (
@@ -103,18 +137,33 @@ export const DailyVisualBar: React.FC<DailyVisualBarProps> = ({
 
         {/* Legend */}
         <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[11px] text-[#6C727F]">
-          <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-sm bg-[#7A9E7E]" />
-            <span>{t.legendGenerator}</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-sm bg-[#7AA2C2]" />
-            <span>{language === 'en' ? 'Grid (Power Back)' : 'အစိုးရမီး (မီးလာချိန်)'}</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-sm bg-[#E2847A]" />
-            <span>{t.legendStandby}</span>
-          </div>
+          {showGenerator ? (
+            <>
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-sm bg-[#7A9E7E]" />
+                <span>{t.legendGenerator}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-sm bg-[#7AA2C2]" />
+                <span>{language === 'en' ? 'Grid (Power Back)' : 'အစိုးရမီး (မီးလာချိန်)'}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-sm bg-[#E2847A]" />
+                <span>{t.legendStandby}</span>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-sm bg-[#7AA2C2]" />
+                <span>{language === 'en' ? 'Grid Power (On)' : 'အစိုးရမီး (မီးလာချိန်)'}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-sm bg-[#E2847A]" />
+                <span>{language === 'en' ? 'Power Outage (Cut)' : 'မီးပျက်ချိန်'}</span>
+              </div>
+            </>
+          )}
         </div>
       </div>
 

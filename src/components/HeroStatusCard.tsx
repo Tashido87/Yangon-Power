@@ -15,6 +15,7 @@ interface HeroStatusCardProps {
   shift: ShiftType;
   rotationMode?: 'auto' | 'manual';
   hasEveningOutage: boolean;
+  showGenerator?: boolean;
   onOpenSettings: () => void;
   isSimulated: boolean;
   simulatedHour: number;
@@ -32,6 +33,7 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
   shift,
   rotationMode = 'auto',
   hasEveningOutage,
+  showGenerator = false,
   onOpenSettings,
   isSimulated,
   simulatedHour,
@@ -67,7 +69,7 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
     : 'bg-[#E2847A]';
 
   // Quick preset buttons for testing different times
-  const presetsShiftB = [
+  const presetsShiftBGen = [
     { label: '07:30 AM', desc: language === 'en' ? 'Grid Power' : 'မနက် အစိုးရမီး', h: 7, m: 30 },
     { label: '10:00 AM', desc: language === 'en' ? 'Standby' : 'မီးပျက် / နားချိန်', h: 10, m: 0 },
     { label: '12:00 PM', desc: language === 'en' ? 'Lunch Gen' : 'နေ့လယ် မီးစက်', h: 12, m: 0 },
@@ -78,7 +80,16 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
     { label: '11:30 PM', desc: language === 'en' ? 'Night Grid' : 'ညဘက် အစိုးရမီး', h: 23, m: 30 },
   ];
 
-  const presetsShiftA = [
+  const presetsShiftBGridOnly = [
+    { label: '07:30 AM', desc: language === 'en' ? 'Grid Power' : 'မနက် အစိုးရမီး', h: 7, m: 30 },
+    { label: '10:00 AM', desc: language === 'en' ? 'Power Outage' : 'မီးပျက်ချိန် (၉-၁)', h: 10, m: 0 },
+    { label: '01:30 PM', desc: language === 'en' ? 'Power Restored' : '၁ နာရီ မီးပြန်လာ', h: 13, m: 30 },
+    { label: '06:00 PM', desc: language === 'en' ? 'Evening Outage' : 'ညနေ မီးပျက် (၅-၉)', h: 18, m: 0 },
+    { label: '09:30 PM', desc: language === 'en' ? 'Power Restored' : 'ည ၉ နာရီ မီးပြန်လာ', h: 21, m: 30 },
+    { label: '11:30 PM', desc: language === 'en' ? 'Night Grid' : 'ညဘက် မီးမပျက်', h: 23, m: 30 },
+  ];
+
+  const presetsShiftAGen = [
     { label: '02:00 AM', desc: language === 'en' ? 'Night Grid' : 'ညဘက် အစိုးရမီး', h: 2, m: 0 },
     { label: '07:30 AM', desc: language === 'en' ? 'Morning Gen' : 'မနက် မီးစက်', h: 7, m: 30 },
     { label: '10:00 AM', desc: language === 'en' ? 'Power Back!' : '၉ နာရီ မီးလာချိန်', h: 10, m: 0 },
@@ -88,52 +99,63 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
     { label: '11:30 PM', desc: language === 'en' ? 'Night Grid' : 'ညဘက် အစိုးရမီး', h: 23, m: 30 },
   ];
 
+  const presetsShiftAGridOnly = [
+    { label: '02:00 AM', desc: language === 'en' ? 'Night Grid' : 'ညဘက် အစိုးရမီး', h: 2, m: 0 },
+    { label: '07:00 AM', desc: language === 'en' ? 'Morning Outage' : 'မနက် မီးပျက် (၅-၉)', h: 7, m: 0 },
+    { label: '10:00 AM', desc: language === 'en' ? 'Power Restored' : '၉ နာရီ မီးပြန်လာ', h: 10, m: 0 },
+    { label: '02:30 PM', desc: language === 'en' ? 'Afternoon Outage' : 'နေ့လယ် မီးပျက် (၁-၅)', h: 14, m: 30 },
+    { label: '06:00 PM', desc: language === 'en' ? 'Power Restored' : 'ညနေ ၅ နာရီ မီးပြန်လာ', h: 18, m: 0 },
+    { label: '11:30 PM', desc: language === 'en' ? 'Night Grid' : 'ညဘက် မီးမပျက်', h: 23, m: 30 },
+  ];
+
+  const presetsShiftB = showGenerator ? presetsShiftBGen : presetsShiftBGridOnly;
+  const presetsShiftA = showGenerator ? presetsShiftAGen : presetsShiftAGridOnly;
   const activePresets = shift === 'shift_a' ? presetsShiftA : presetsShiftB;
 
   return (
     <section id="hero-status" className="w-full">
       <div className={`relative bg-white rounded-3xl p-5 sm:p-7 border ${cardBorderClass} shadow-md transition-all duration-300`}>
         
-        {/* Top Header Row: Date & Live Myanmar Clock & Setting Icon in a single line */}
-        <div className="flex items-center justify-between gap-1.5 sm:gap-3 pb-3 border-b border-[#FAF7F2]">
+        {/* Top Header Row: Date & Live Myanmar Clock & Setting Icon in a single line on mobile and desktop */}
+        <div className="flex items-center justify-between gap-1.5 sm:gap-3 pb-3 border-b border-[#FAF7F2] w-full">
           {/* Left: Date */}
-          <div className="flex items-center gap-1.5 text-xs text-[#6C727F] min-w-0">
+          <div className="flex items-center gap-1.5 text-xs text-[#6C727F] shrink-0">
             <Calendar className="w-3.5 h-3.5 text-[#8AA399] shrink-0" />
-            <span className="font-medium text-[#2D3142] truncate hidden sm:inline">{currentDateStr}</span>
-            <span className="font-medium text-[#2D3142] truncate sm:hidden">{currentShortDateStr || currentDateStr}</span>
+            <span className="font-semibold text-[#2D3142] truncate hidden sm:inline">{currentDateStr}</span>
+            <span className="font-semibold text-[#2D3142] truncate sm:hidden">{currentShortDateStr || currentDateStr}</span>
           </div>
 
-          {/* Right: Clock & Action Buttons (Setting Icon, Slider Icon) */}
-          <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
-            {/* Clock container */}
-            <button
-              type="button"
-              onClick={() => {
-                if (isSimulated) {
-                  onResetToLive();
-                  setShowTimeSlider(false);
-                  soundManager.playCutePop();
-                }
-              }}
-              title={isSimulated ? (language === 'en' ? 'Click to return to live time' : 'လက်ရှိအချိန်သို့ ပြန်သွားရန် နှိပ်ပါ') : 'Live Myanmar Time'}
-              className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 rounded-xl sm:rounded-2xl border text-xs sm:text-sm font-semibold text-[#2D3142] tabular-nums shadow-inner transition-all ${
-                isSimulated ? 'bg-[#FFF5F2] border-[#FADCD5] hover:border-[#E2847A] cursor-pointer' : 'bg-[#FAF7F2] border-[#EFECE6]'
-              }`}
-            >
-              <Clock className={`w-3.5 h-3.5 shrink-0 ${isSimulated ? 'text-[#E2847A]' : 'text-[#7A9E7E]'}`} />
-              <span>{currentTimeStr}</span>
-              {isSimulated ? (
-                <span className="text-[9px] sm:text-[10px] font-bold text-[#E2847A] bg-[#FDF0EE] px-1 sm:px-1.5 py-0.2 rounded-md uppercase tracking-wider ml-0.5 sm:ml-1">
-                  {t.simBadge}
-                </span>
-              ) : (
-                <span className="hidden xs:inline-flex sm:inline-flex items-center gap-1 text-[9px] sm:text-[10px] font-bold text-[#7A9E7E] bg-[#EBF3EC] px-1 sm:px-1.5 py-0.2 rounded-md uppercase tracking-wider ml-0.5 sm:ml-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#7A9E7E] animate-ping" />
-                  MMT
-                </span>
-              )}
-            </button>
+          {/* Center: Live Myanmar Time */}
+          <button
+            type="button"
+            onClick={() => {
+              if (isSimulated) {
+                onResetToLive();
+                setShowTimeSlider(false);
+                soundManager.playCutePop();
+              }
+            }}
+            title={isSimulated ? (language === 'en' ? 'Click to return to live time' : 'လက်ရှိအချိန်သို့ ပြန်သွားရန် နှိပ်ပါ') : 'Live Myanmar Time'}
+            className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 rounded-xl sm:rounded-2xl border text-xs sm:text-sm font-bold text-[#2D3142] tabular-nums shadow-inner transition-all shrink-0 ${
+              isSimulated ? 'bg-[#FFF5F2] border-[#FADCD5] hover:border-[#E2847A] cursor-pointer' : 'bg-[#FAF7F2] border-[#EFECE6]'
+            }`}
+          >
+            <Clock className={`w-3.5 h-3.5 shrink-0 ${isSimulated ? 'text-[#E2847A]' : 'text-[#7A9E7E]'}`} />
+            <span>{currentTimeStr}</span>
+            {isSimulated ? (
+              <span className="text-[9px] sm:text-[10px] font-bold text-[#E2847A] bg-[#FDF0EE] px-1 sm:px-1.5 py-0.2 rounded-md uppercase tracking-wider ml-0.5 sm:ml-1">
+                {t.simBadge}
+              </span>
+            ) : (
+              <span className="hidden sm:inline-flex items-center gap-1 text-[9px] sm:text-[10px] font-bold text-[#7A9E7E] bg-[#EBF3EC] px-1 sm:px-1.5 py-0.2 rounded-md uppercase tracking-wider ml-0.5 sm:ml-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#7A9E7E] animate-ping" />
+                MMT
+              </span>
+            )}
+          </button>
 
+          {/* Right: Actions (Reset if simulated, Slider toggle, Settings button) */}
+          <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
             {/* Direct Reset to Live Button (shown when simulated) */}
             {isSimulated && (
               <button
@@ -147,7 +169,7 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
                 title="Reset to current live Myanmar Standard Time"
               >
                 <RotateCcw className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                <span className="hidden sm:inline text-[11px]">{language === 'en' ? 'Reset Live' : 'လက်ရှိအချိန်'}</span>
+                <span className="hidden md:inline text-[11px]">{language === 'en' ? 'Reset' : 'လက်ရှိ'}</span>
               </button>
             )}
 
@@ -157,7 +179,7 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
                 setShowTimeSlider(!showTimeSlider);
                 soundManager.playCutePop();
               }}
-              className={`cute-press h-7 w-7 sm:h-8 sm:w-auto sm:px-2.5 rounded-xl border text-xs font-medium flex items-center justify-center gap-1 transition-all ${
+              className={`cute-press h-7 w-7 sm:h-8 sm:w-auto sm:px-2 rounded-xl border text-xs font-medium flex items-center justify-center gap-1 transition-all ${
                 showTimeSlider
                   ? 'bg-[#7A9E7E] text-white border-[#7A9E7E]'
                   : 'bg-white border-[#EFECE6] text-[#6C727F] hover:text-[#2D3142]'
@@ -165,7 +187,7 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
               title="Test status at different hours"
             >
               <Sliders className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">{t.timeTravelToggle}</span>
+              <span className="hidden md:inline text-[11px]">{t.timeTravelToggle}</span>
             </button>
 
             {/* Settings button */}
@@ -175,11 +197,11 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
                 onOpenSettings();
                 soundManager.playCutePop();
               }}
-              className="cute-press h-7 w-7 sm:h-8 sm:w-auto sm:px-2.5 rounded-xl border border-[#EFECE6] bg-white hover:bg-[#FAF7F2] text-[#6C727F] hover:text-[#2D3142] hover:border-[#7A9E7E]/40 flex items-center justify-center gap-1 transition-all"
+              className="cute-press h-7 w-7 sm:h-8 sm:w-auto sm:px-2.5 rounded-xl border border-[#EAE6DF] bg-white hover:bg-[#FAF7F2] text-[#6C727F] hover:text-[#2D3142] hover:border-[#7A9E7E]/50 flex items-center justify-center gap-1 transition-all shadow-2xs cursor-pointer"
               title="Open Settings"
               aria-label="Settings"
             >
-              <Settings className="w-3.5 h-3.5" />
+              <Settings className="w-3.5 h-3.5 text-[#7A9E7E]" />
               <span className="hidden sm:inline text-[11px] font-semibold">{language === 'en' ? 'Settings' : 'ချိန်ညှိရန်'}</span>
             </button>
           </div>
@@ -320,7 +342,11 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
                   {isOutage && (
                     <span className="text-[#B8574B] flex items-center gap-2">
                       <ZapOff className="w-6 h-6 sm:w-7 sm:h-7 text-[#E2847A] shrink-0" />
-                      <span>{t.outageStandbyTitle}</span>
+                      <span>
+                        {!showGenerator
+                          ? (language === 'en' ? 'Power Outage' : 'မီးပျက်နေပါသည်')
+                          : t.outageStandbyTitle}
+                      </span>
                     </span>
                   )}
                   {isNight && (
@@ -332,7 +358,11 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
                   {isGrid && (
                     <span className="text-[#2C5E82] flex items-center gap-2">
                       <Sparkles className="w-6 h-6 sm:w-7 sm:h-7 text-[#4A90E2] shrink-0" />
-                      <span>{language === 'en' ? 'Grid Power Restored' : 'မီးပြန်လာပါပြီ'}</span>
+                      <span>
+                        {!showGenerator
+                          ? (language === 'en' ? 'Grid Power On' : 'မီးလာနေပါသည် (အစိုးရမီး)')
+                          : (language === 'en' ? 'Grid Power Restored' : 'မီးပြန်လာပါပြီ')}
+                      </span>
                     </span>
                   )}
                 </h1>
@@ -372,12 +402,12 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
             </div>
           </div>
 
-          {/* Next upcoming event detail */}
-          <div className="p-3.5 sm:p-4 rounded-2xl bg-[#FAF7F2] border border-[#EFECE6] flex items-center gap-3 shadow-xs">
-            <div className="w-10 h-10 rounded-xl bg-white border border-[#EAE6DF] flex items-center justify-center shrink-0 text-[#E2847A] shadow-xs">
+          {/* Next upcoming event detail (fully visible with relaxed line-height and no clipping) */}
+          <div className="p-3.5 sm:p-4 rounded-2xl bg-[#FAF7F2] border border-[#EFECE6] flex items-start sm:items-center gap-3 shadow-xs">
+            <div className="w-10 h-10 rounded-xl bg-white border border-[#EAE6DF] flex items-center justify-center shrink-0 text-[#E2847A] shadow-xs mt-0.5 sm:mt-0">
               <ArrowRight className="w-5 h-5" />
             </div>
-            <div className="min-w-0 flex-1">
+            <div className="min-w-0 flex-1 overflow-visible">
               <div className="text-[11px] font-medium uppercase tracking-wider text-[#8AA399] flex items-center gap-1.5 flex-wrap">
                 <span>{t.targetEvent}</span>
                 <span className="font-bold text-[#2D3142] tabular-nums">
@@ -386,7 +416,7 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
                     : (statusInfo.nextEvent.timeStringMy || statusInfo.nextEvent.timeString)}
                 </span>
               </div>
-              <div className="text-xs sm:text-sm font-semibold text-[#2D3142] leading-snug break-words">
+              <div className="text-xs sm:text-sm font-semibold text-[#2D3142] leading-relaxed break-words mt-0.5">
                 {language === 'en'
                   ? statusInfo.nextEvent.eventDescriptionEn
                   : statusInfo.nextEvent.eventDescriptionMy}

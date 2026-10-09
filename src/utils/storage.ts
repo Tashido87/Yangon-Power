@@ -5,6 +5,7 @@ export interface StoredSettings {
   shift: ShiftType;
   rotationMode: 'auto' | 'manual';
   hasEveningOutage: boolean;
+  showGenerator: boolean; // default: false (မီးလာ၊ မီးပျက် အချိန်ဇယားပဲပြရန်)
   language: Language;
   isSoundEnabled: boolean;
 }
@@ -16,6 +17,7 @@ export const DEFAULT_SETTINGS: StoredSettings = {
   shift: 'shift_a', // Today (Oct 7) is Shift A
   rotationMode: 'auto', // Default: Auto daily alternating rotation
   hasEveningOutage: true, // 5 PM - 9 PM evening outage is active
+  showGenerator: false, // Default: FALSE as requested by user! Only show power on / off schedule by default
   language: 'my',
   isSoundEnabled: true,
 };
@@ -40,6 +42,7 @@ export function loadStoredSettings(): StoredSettings {
           shift: liveMmt.autoShift, // Use today's correct auto-shift (Oct 7 = Shift A)
           rotationMode: 'auto',
           hasEveningOutage: true,
+          showGenerator: false,
           language: legacyParsed.language === 'en' ? 'en' : 'my',
           isSoundEnabled: typeof legacyParsed.isSoundEnabled === 'boolean' ? legacyParsed.isSoundEnabled : true,
         };
@@ -61,6 +64,7 @@ export function loadStoredSettings(): StoredSettings {
       shift: computedShift,
       rotationMode,
       hasEveningOutage: typeof parsed.hasEveningOutage === 'boolean' ? parsed.hasEveningOutage : true,
+      showGenerator: typeof parsed.showGenerator === 'boolean' ? parsed.showGenerator : false,
       language: parsed.language === 'en' ? 'en' : 'my',
       isSoundEnabled: typeof parsed.isSoundEnabled === 'boolean' ? parsed.isSoundEnabled : true,
     };

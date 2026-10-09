@@ -12,6 +12,8 @@ interface SettingsModalProps {
   onShiftChange: (shift: ShiftType, mode?: 'auto' | 'manual') => void;
   hasEveningOutage: boolean;
   onToggleEveningOutage: (val: boolean) => void;
+  showGenerator: boolean;
+  onToggleShowGenerator: (val: boolean) => void;
   language: Language;
   onLanguageChange: (lang: Language) => void;
   isSoundEnabled: boolean;
@@ -26,6 +28,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onShiftChange,
   hasEveningOutage,
   onToggleEveningOutage,
+  showGenerator,
+  onToggleShowGenerator,
   language,
   onLanguageChange,
   isSoundEnabled,
@@ -227,7 +231,62 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
         </div>
 
-        {/* Section 3: Language and Sound Controls */}
+        {/* Section 3: Generator Schedule Display Toggle (Requested by user: default OFF) */}
+        <div className="p-3.5 rounded-2xl bg-[#FAF7F2] border border-[#EAE6DF] space-y-2">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <div className="text-xs font-bold text-[#2D3142] flex items-center gap-1.5">
+                <span className="text-sm">⚙️</span>
+                <span>
+                  {language === 'en'
+                    ? 'Generator Schedule Display'
+                    : 'မီးစက် အချိန်ဇယား ပြသမှု'}
+                </span>
+              </div>
+              <p className="text-[11px] text-[#727885] mt-0.5 leading-relaxed">
+                {showGenerator
+                  ? (language === 'en'
+                      ? 'Generator schedule enabled (Showing operating & standby hours).'
+                      : 'မီးစက်မောင်းချိန်နှင့် နားချိန်များကို ထည့်သွင်းပြသနေပါသည်။')
+                  : (language === 'en'
+                      ? 'Hidden (Default) · Showing Grid Power On & Outage schedule only.'
+                      : 'မီးစက်ပြသမှု ပိတ်ထားပါသည် · အစိုးရမီး လာ/ပျက် အချိန်ဇယားကိုသာ ပြသနေပါသည် (မူလသတ်မှတ်ချက်)။')}
+              </p>
+            </div>
+
+            {/* Cute Pill Switch */}
+            <button
+              type="button"
+              onClick={() => {
+                onToggleShowGenerator(!showGenerator);
+                soundManager.playCutePop();
+              }}
+              className={`w-12 h-6 rounded-full transition-colors relative flex items-center px-1 shrink-0 cursor-pointer ${
+                showGenerator ? 'bg-[#7A9E7E]' : 'bg-[#D1D5DB]'
+              }`}
+              title="Toggle Generator Display"
+            >
+              <div
+                className={`w-4 h-4 rounded-full bg-white shadow-xs transition-transform ${
+                  showGenerator ? 'translate-x-6' : 'translate-x-0'
+                }`}
+              />
+            </button>
+          </div>
+
+          <div className="text-[10px] bg-white/80 p-2 rounded-xl border border-[#EFECE6] flex items-center justify-between">
+            <span className={showGenerator ? 'text-[#7A9E7E] font-medium' : 'text-[#6C727F] font-medium'}>
+              {showGenerator
+                ? (language === 'en' ? '🟢 Showing Generator Hours' : '🟢 မီးစက်မောင်းချိန်များ ပြသနေသည်')
+                : (language === 'en' ? '⚪ Grid Power On / Off Only (Generator Hidden)' : '⚪ အစိုးရမီး လာ/ပျက် သီးသန့်ပြသမှု (မီးစက်မပြပါ)')}
+            </span>
+            <span className={`font-semibold ${showGenerator ? 'text-[#7A9E7E]' : 'text-[#6C727F]'}`}>
+              {showGenerator ? (language === 'en' ? 'ON' : 'ဖွင့်ထားသည်') : (language === 'en' ? 'OFF (Default)' : 'ပိတ်ထားသည် (Default)')}
+            </span>
+          </div>
+        </div>
+
+        {/* Section 4: Language and Sound Controls */}
         <div className="grid grid-cols-2 gap-2.5">
           {/* Language Selector */}
           <div className="p-3 rounded-2xl bg-[#FAF7F2] border border-[#EAE6DF] space-y-1.5">
