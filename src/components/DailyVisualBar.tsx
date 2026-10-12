@@ -49,8 +49,9 @@ const SEGMENTS_GRID_ONLY_SHIFT_A: Segment[] = [
 // Generator Detailed segments (when Generator is enabled by user)
 const SEGMENTS_SHIFT_B: Segment[] = [
   { start: 0, end: 9, type: 'grid', labelEn: 'Mains Grid (12 AM – 9 AM) · No Night Outage', labelMy: 'အစိုးရမီး (ည ၁၂ မှ မနက် ၉ နာရီ) · ညမီးမပျက်ပါ' },
-  { start: 9, end: 11, type: 'standby', labelEn: 'Outage Standby (9 AM – 11 AM)', labelMy: 'မီးပျက် / နားချိန် (၉-၁၁ မနက်)' },
-  { start: 11, end: 13, type: 'gen', labelEn: 'Lunch Generator (11 AM – 1 PM)', labelMy: 'နေ့လယ် မီးစက် (၁၁-၁ နေ့လယ်)' },
+  { start: 9, end: 11, type: 'gen', labelEn: 'Morning Generator (9 AM – 11 AM)', labelMy: 'မနက်ပိုင်း မီးစက် (၉-၁၁ မနက်)' },
+  { start: 11, end: 12, type: 'standby', labelEn: 'Generator Off / Rest (11 AM – 12 PM)', labelMy: 'မီးစက်နားချိန် (၁၁-၁၂ နေ့လယ်)' },
+  { start: 12, end: 13, type: 'gen', labelEn: 'Lunch Generator (12 PM – 1 PM)', labelMy: 'နေ့လယ် မီးစက် (၁၂-၁ နေ့လယ်)' },
   { start: 13, end: 17, type: 'grid', labelEn: 'Power Restored (1 PM – 5 PM) · EPC Grid Active', labelMy: 'မီးပြန်လာပါပြီ (၁-၅ ညနေ) · အစိုးရမီးရရှိချိန်' },
   { start: 17, end: 18, type: 'standby', labelEn: 'Evening Standby (5 PM – 6 PM)', labelMy: 'ညနေ နားချိန် (၅-၆ ညနေ)' },
   { start: 18, end: 21, type: 'gen', labelEn: 'Evening Peak Generator (6 PM – 9 PM)', labelMy: 'ညနေ မီးစက် (၆-၉ ည)' },
@@ -59,8 +60,9 @@ const SEGMENTS_SHIFT_B: Segment[] = [
 
 const SEGMENTS_SHIFT_B_NO_EVENING: Segment[] = [
   { start: 0, end: 9, type: 'grid', labelEn: 'Mains Grid (12 AM – 9 AM) · No Night Outage', labelMy: 'အစိုးရမီး (ည ၁၂ မှ မနက် ၉ နာရီ) · ညမီးမပျက်ပါ' },
-  { start: 9, end: 11, type: 'standby', labelEn: 'Outage Standby (9 AM – 11 AM)', labelMy: 'မီးပျက် / နားချိန် (၉-၁၁ မနက်)' },
-  { start: 11, end: 13, type: 'gen', labelEn: 'Lunch Generator (11 AM – 1 PM)', labelMy: 'နေ့လယ် မီးစက် (၁၁-၁ နေ့လယ်)' },
+  { start: 9, end: 11, type: 'gen', labelEn: 'Morning Generator (9 AM – 11 AM)', labelMy: 'မနက်ပိုင်း မီးစက် (၉-၁၁ မနက်)' },
+  { start: 11, end: 12, type: 'standby', labelEn: 'Generator Off / Rest (11 AM – 12 PM)', labelMy: 'မီးစက်နားချိန် (၁၁-၁၂ နေ့လယ်)' },
+  { start: 12, end: 13, type: 'gen', labelEn: 'Lunch Generator (12 PM – 1 PM)', labelMy: 'နေ့လယ် မီးစက် (၁၂-၁ နေ့လယ်)' },
   { start: 13, end: 24, type: 'grid', labelEn: 'Power Restored (1 PM – 12 AM) · No Night Outage', labelMy: 'မီးပြန်လာပါပြီ (၁-၁၂ ည) · ညမီးမပျက်ပါ' },
 ];
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Clock, Calendar, Sliders, RotateCcw, Sparkles, Zap, ZapOff, Moon, ArrowRight, Settings } from 'lucide-react';
+import { Clock, Calendar, RotateCcw, Sparkles, Zap, ZapOff, Moon, ArrowRight, Settings } from 'lucide-react';
 import { CurrentStatusCalculation, Language, ShiftType } from '../types';
 import { CuteMascot } from './CuteMascot';
 import { formatCountdown } from '../utils/scheduleCalculator';
@@ -71,8 +71,9 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
   // Quick preset buttons for testing different times
   const presetsShiftBGen = [
     { label: '07:30 AM', desc: language === 'en' ? 'Grid Power' : 'မနက် အစိုးရမီး', h: 7, m: 30 },
-    { label: '10:00 AM', desc: language === 'en' ? 'Standby' : 'မီးပျက် / နားချိန်', h: 10, m: 0 },
-    { label: '12:00 PM', desc: language === 'en' ? 'Lunch Gen' : 'နေ့လယ် မီးစက်', h: 12, m: 0 },
+    { label: '10:00 AM', desc: language === 'en' ? 'Morning Gen' : 'မနက် မီးစက်', h: 10, m: 0 },
+    { label: '11:30 AM', desc: language === 'en' ? 'Gen Off / Rest' : 'မီးစက်နား (၁၁-၁၂)', h: 11, m: 30 },
+    { label: '12:30 PM', desc: language === 'en' ? 'Lunch Gen' : 'နေ့လယ် မီးစက် (၁၂-၁)', h: 12, m: 30 },
     { label: '01:30 PM', desc: language === 'en' ? 'Power Back!' : '၁ နာရီ မီးလာချိန်', h: 13, m: 30 },
     { label: '05:30 PM', desc: language === 'en' ? 'Evening Standby' : 'ညနေ နားချိန်', h: 17, m: 30 },
     { label: '07:00 PM', desc: language === 'en' ? 'Evening Gen' : 'ညနေ မီးစက်', h: 19, m: 0 },
@@ -133,11 +134,18 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
                 onResetToLive();
                 setShowTimeSlider(false);
                 soundManager.playCutePop();
+              } else {
+                setShowTimeSlider(!showTimeSlider);
+                soundManager.playCutePop();
               }
             }}
-            title={isSimulated ? (language === 'en' ? 'Click to return to live time' : 'လက်ရှိအချိန်သို့ ပြန်သွားရန် နှိပ်ပါ') : 'Live Myanmar Time'}
-            className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 rounded-xl sm:rounded-2xl border text-xs sm:text-sm font-bold text-[#2D3142] tabular-nums shadow-inner transition-all shrink-0 ${
-              isSimulated ? 'bg-[#FFF5F2] border-[#FADCD5] hover:border-[#E2847A] cursor-pointer' : 'bg-[#FAF7F2] border-[#EFECE6]'
+            title={
+              isSimulated
+                ? (language === 'en' ? 'Click to return to live time' : 'လက်ရှိအချိန်သို့ ပြန်သွားရန် နှိပ်ပါ')
+                : (language === 'en' ? 'Live Myanmar Time · Click to test other hours' : 'မြန်မာစံတော်ချိန် · အချိန်စမ်းသပ်ရန် နှိပ်ပါ')
+            }
+            className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 rounded-xl sm:rounded-2xl border text-xs sm:text-sm font-bold text-[#2D3142] tabular-nums shadow-inner transition-all shrink-0 cursor-pointer ${
+              isSimulated ? 'bg-[#FFF5F2] border-[#FADCD5] hover:border-[#E2847A]' : 'bg-[#FAF7F2] border-[#EFECE6] hover:border-[#7A9E7E]/40'
             }`}
           >
             <Clock className={`w-3.5 h-3.5 shrink-0 ${isSimulated ? 'text-[#E2847A]' : 'text-[#7A9E7E]'}`} />
@@ -154,7 +162,7 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
             )}
           </button>
 
-          {/* Right: Actions (Reset if simulated, Slider toggle, Settings button) */}
+          {/* Right: Actions (Reset if simulated, Single Settings button) */}
           <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
             {/* Direct Reset to Live Button (shown when simulated) */}
             {isSimulated && (
@@ -173,31 +181,14 @@ export const HeroStatusCard: React.FC<HeroStatusCardProps> = ({
               </button>
             )}
 
-            {/* Time travel trigger button */}
-            <button
-              onClick={() => {
-                setShowTimeSlider(!showTimeSlider);
-                soundManager.playCutePop();
-              }}
-              className={`cute-press h-7 w-7 sm:h-8 sm:w-auto sm:px-2 rounded-xl border text-xs font-medium flex items-center justify-center gap-1 transition-all ${
-                showTimeSlider
-                  ? 'bg-[#7A9E7E] text-white border-[#7A9E7E]'
-                  : 'bg-white border-[#EFECE6] text-[#6C727F] hover:text-[#2D3142]'
-              }`}
-              title="Test status at different hours"
-            >
-              <Sliders className="w-3.5 h-3.5" />
-              <span className="hidden md:inline text-[11px]">{t.timeTravelToggle}</span>
-            </button>
-
-            {/* Settings button */}
+            {/* Single Settings button */}
             <button
               type="button"
               onClick={() => {
                 onOpenSettings();
                 soundManager.playCutePop();
               }}
-              className="cute-press h-7 w-7 sm:h-8 sm:w-auto sm:px-2.5 rounded-xl border border-[#EAE6DF] bg-white hover:bg-[#FAF7F2] text-[#6C727F] hover:text-[#2D3142] hover:border-[#7A9E7E]/50 flex items-center justify-center gap-1 transition-all shadow-2xs cursor-pointer"
+              className="cute-press h-7 w-7 sm:h-8 sm:w-auto sm:px-2.5 rounded-xl border border-[#EAE6DF] bg-white hover:bg-[#FAF7F2] text-[#6C727F] hover:text-[#2D3142] hover:border-[#7A9E7E]/50 flex items-center justify-center gap-1.5 transition-all shadow-2xs cursor-pointer"
               title="Open Settings"
               aria-label="Settings"
             >
